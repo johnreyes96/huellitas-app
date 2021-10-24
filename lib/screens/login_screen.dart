@@ -1,5 +1,12 @@
-import 'package:email_validator/email_validator.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:http/http.dart' as http;
+import 'package:huellitas_app_flutter/components/loader_component.dart';
+import 'package:huellitas_app_flutter/helpers/constans.dart';
+import 'package:huellitas_app_flutter/models/token.dart';
+import 'package:huellitas_app_flutter/screens/home_screen.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({ Key? key }) : super(key: key);
   @override
@@ -10,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _email = '';
   String _emailError = '';
   bool _emailShowError = false;
+  bool _showLoader = false;
   String _password = '';
   String _passwordError = '';
   bool _passwordShowError = false;
@@ -19,24 +27,27 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _showLogo(),
-            SizedBox(height: 20,),
-            _showEmail(),
-            _showPassword(),
-            _showRememberme(),
-            _showButtons(),
-          ],
-        )
+ body: Stack(
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _showLogo(),
+              SizedBox(height: 20,),
+              _showEmail(),
+              _showPassword(),
+              _showRememberme(),
+              _showButtons(),
+            ],
+          ),
+          _showLoader ? LoaderComponent(text: 'Por favor espere...') : Container(),
+        ],
       ),
     );
   }
   Widget _showLogo() {
     return Image(
-      image: AssetImage('assets/vehicles_logo.png'),
+      image: AssetImage('assets/huellitas_logo.png'),
       width: 300,
     );
   }
@@ -44,7 +55,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _showEmail() {
     return Container(
       padding: EdgeInsets.all(20),
-      padding: EdgeInsets.all(10),
       child: TextField(
         autofocus: true,
         keyboardType: TextInputType.emailAddress,
@@ -74,20 +84,20 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: InputDecoration(
           hintText: 'Ingresa tu contraseña...',
           labelText: 'Contraseña',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
-        ),
            errorText: _passwordShowError ? _passwordError : null,
           prefixIcon: Icon(Icons.lock),
           suffixIcon: IconButton(
-            icon: _passwordShow ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+          icon: _passwordShow ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
               });
-            }, 
+            },
           ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10)
+          )
+        ),
         onChanged: (value) {
           _password = value;
         },
@@ -146,21 +156,66 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
   
-  void _login() {
-    if(!_validateFields()) {
+    void _login() async {
+    setState(() {
+      _passwordShow = false;
+    });
+
+  if(!_validateFields()) {
       return;
     }
+
+    setState(() {
+      _showLoader = true;
+    });
+
+    Map<String, dynamic> request = {
+      'userName': _email,
+      'password': _password,
+    };
+
+    var url = Uri.parse('${Constans.apiUrl}/api/Account/CreateToken');
+    var response = await http.post(
+      url,
+      headers: {
+        'content-type' : 'application/json',
+        'accept' : 'application/json',
+      },
+      body: jsonEncode(request),
+    );
+
+    setState(() {
+      _showLoader = false;
+    });
+
+    if(response.statusCode >= 400) {
+      setState(() {
+        _passwordShowError = true;
+        _passwordError = "Email o contraseña incorrectos";
+      });
+      return;
+    }
+
+    var body = response.body;
+    var decodedJson = jsonDecode(body);
+    var token = Token.fromJson(decodedJson);
+    Navigator.pushReplacement(
+      context, 
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(token: token,)
+      )
+    );
   }
 
   bool _validateFields() {
-    bool hasErrors = false;
+    bool isValid = true;
 
     if (_email.isEmpty) {
-      hasErrors = true;
+      isValid = false;
       _emailShowError = true;
       _emailError = 'Debes ingresar tu email.';
     } else if (!EmailValidator.validate(_email)) {
-      hasErrors = true;
+      isValid = false;
       _emailShowError = true;
       _emailError = 'Debes ingresar un email válido.';
     } else {
@@ -168,11 +223,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     if (_password.isEmpty) {
-      hasErrors = true;
+      isValid = false;
       _passwordShowError = true;
       _passwordError = 'Debes ingresar tu contraseña.';
     } else if (_password.length < 6) {
-      hasErrors = true;
+      isValid = false;
       _passwordShowError = true;
       _passwordError = 'Debes ingresar una contraseña de al menos 6 carácteres.';
     } else {
@@ -180,6 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     setState(() { });
-    return hasErrors;
+
+    return isValid;
   }
 }

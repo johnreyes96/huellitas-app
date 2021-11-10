@@ -8,53 +8,61 @@ import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+
   const LoginScreen({ Key? key }) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool _showLoader = false;
+  bool _rememberme = true;
+  bool _passwordShow = false;
+
   String _email = '';
   String _emailError = '';
   bool _emailShowError = false;
-  bool _showLoader = false;
+  
   String _password = '';
   String _passwordError = '';
   bool _passwordShowError = false;
-  bool _rememberme = true;
-  bool _passwordShow = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
- body: Stack(
+      body: Stack(
         children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _showLogo(),
-              SizedBox(height: 20,),
-              _showEmail(),
-              _showPassword(),
-              _showRememberme(),
-              _showButtons(),
-            ],
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 40),
+                _showLogo(),
+                const SizedBox(height: 20),
+                _showEmail(),
+                _showPassword(),
+                _showRememberme(),
+                _showButtons(),
+              ]
+            )
           ),
-          _showLoader ? LoaderComponent(text: 'Por favor espere...') : Container(),
-        ],
-      ),
+          _showLoader ? const LoaderComponent(text: 'Por favor espere...') : Container()
+        ]
+      )
     );
   }
+
   Widget _showLogo() {
-    return Image(
+    return const Image(
       image: AssetImage('assets/huellitas_logo.png'),
-      width: 300,
+      width: 300
     );
   }
 
   Widget _showEmail() {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         autofocus: true,
         keyboardType: TextInputType.emailAddress,
@@ -62,37 +70,36 @@ class _LoginScreenState extends State<LoginScreen> {
           hintText: 'Ingresa tu email...',
           labelText: 'Email',
           errorText: _emailShowError ? _emailError : null,
-          prefixIcon: Icon(Icons.alternate_email),
-          suffixIcon: Icon(Icons.email),
+          prefixIcon: const Icon(Icons.alternate_email),
+          suffixIcon: const Icon(Icons.email),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10)
-          ),
+          )
         ),
         onChanged: (value) {
           _email = value;
-          print(_email);
-        },
-      ),
+        }
+      )
     );
   }
 
   Widget _showPassword() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         obscureText: !_passwordShow,
         decoration: InputDecoration(
           hintText: 'Ingresa tu contraseña...',
           labelText: 'Contraseña',
-           errorText: _passwordShowError ? _passwordError : null,
-          prefixIcon: Icon(Icons.lock),
+          errorText: _passwordShowError ? _passwordError : null,
+          prefixIcon: const Icon(Icons.lock),
           suffixIcon: IconButton(
-          icon: _passwordShow ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+          icon: _passwordShow ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
               });
-            },
+            }
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10)
@@ -100,14 +107,14 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         onChanged: (value) {
           _password = value;
-        },
-      ),
+        }
+      )
     );
   }
 
   Widget _showRememberme() {
     return CheckboxListTile(
-      title: Text('Recordarme'),
+      title: const Text('Recordarme'),
       value: _rememberme,
       onChanged: (value) {  
         setState(() {
@@ -119,32 +126,31 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _showButtons() {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
+      margin: const EdgeInsets.only(left: 10, right: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Expanded(
             child: ElevatedButton(
-              child: Text('Iniciar Sesión'),
+              child: const Text('Iniciar Sesión'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
-                    return Color(0xFF120E43);
+                    return const Color(0xFF004489);
                   }
                 ),
               ),
-              onPressed: () => _login(), 
-
+              onPressed: () => _login()
             ),
           ),
-          SizedBox(width: 20,),
+          const SizedBox(width: 20,),
           Expanded(
             child: ElevatedButton(
-              child: Text('Nuevo Usuario'),
+              child: const Text('Nuevo Usuario'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
-                    return Color(0xFFE03B8B);
+                    return const Color(0xFFFF1E0B);
                   }
                 ),
               ),
@@ -156,12 +162,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
   
-    void _login() async {
+  void _login() async {
     setState(() {
       _passwordShow = false;
     });
 
-  if(!_validateFields()) {
+    if(!_validateFields()) {
       return;
     }
 

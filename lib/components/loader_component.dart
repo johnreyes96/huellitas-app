@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class LoaderComponent extends StatelessWidget {
   final String text;
 
-  LoaderComponent({this.text = ''});
+  // ignore: use_key_in_widget_constructors
+  const LoaderComponent({this.text = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +19,9 @@ class LoaderComponent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 20,),
-            Text(text, style: TextStyle(fontSize: 20),),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 20,),
+            Text(text, style: const TextStyle(fontSize: 20),),
           ],
         ),
       ),

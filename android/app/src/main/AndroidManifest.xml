@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.huellitas_app_flutter">
+    package="com.softwaresolutions.huellitas">
    <application
         android:label="huellitas_app_flutter"
         android:icon="@mipmap/launcher_icon">

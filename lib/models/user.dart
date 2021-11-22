@@ -1,3 +1,6 @@
+import 'package:huellitas_app_flutter/models/appointment.dart';
+import 'package:huellitas_app_flutter/models/pet.dart';
+
 import 'document_type.dart';
 
 class User {
@@ -10,6 +13,9 @@ class User {
   String imageFullPath = '';
   int userType = 0;
   String fullName = '';
+  List<Pet> pets = [];
+  int petsCount = 0;
+  List<Appointment> appointments = [];
   String id = '';
   String userName = '';
   String email = '';
@@ -25,6 +31,9 @@ class User {
     required this.imageFullPath,
     required this.userType,
     required this.fullName,
+    required this.pets,
+    required this.petsCount,
+    required this.appointments,
     required this.id,
     required this.userName,
     required this.email,
@@ -41,6 +50,19 @@ class User {
     imageFullPath = json['imageFullPath'];
     userType = json['userType'];
     fullName = json['fullName'];
+    if (json['pets'] != null) {
+      pets = [];
+      json['pets'].forEach((v) {
+        pets.add(new Pet.fromJson(v));
+      });
+    }
+    if (json['appointments'] != null) {
+      appointments = [];
+      json['appointments'].forEach((v) {
+        appointments.add(new Appointment.fromJson(v));
+      });
+    }
+    petsCount = json['petsCount'];
     id = json['id'];
     userName = json['userName'];
     email = json['email'];
@@ -58,6 +80,9 @@ class User {
     data['imageFullPath'] = this.imageFullPath;
     data['userType'] = this.userType;
     data['fullName'] = this.fullName;
+    data['pets'] = this.pets.map((v) => v.toJson()).toList();
+    data['petsCount'] = this.petsCount;
+    data['appointments'] = this.appointments.map((v) => v.toJson()).toList();
     data['id'] = this.id;
     data['userName'] = this.userName;
     data['email'] = this.email;

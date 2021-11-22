@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:http/http.dart' as http;
 import 'package:huellitas_app_flutter/components/loader_component.dart';
-import 'package:huellitas_app_flutter/helpers/constans.dart';
+import 'package:huellitas_app_flutter/helpers/constants.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/home_screen.dart';
 
@@ -180,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
       'password': _password,
     };
 
-    var url = Uri.parse('${Constans.apiUrl}/api/Account/CreateToken');
+    var url = Uri.parse('${Constants.apiUrl}/api/Account/CreateToken');
     var response = await http.post(
       url,
       headers: {

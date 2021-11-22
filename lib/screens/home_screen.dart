@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/login_screen.dart';
+import 'package:huellitas_app_flutter/screens/users_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final Token token;
@@ -154,7 +155,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white
               )
             ),
-            onTap: () { }
+            onTap: () { 
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => UsersScreen(token: widget.token,)
+                )
+              );
+            },
           ),
           const Divider(
             color: Colors.black, 

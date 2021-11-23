@@ -101,10 +101,46 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     return Column(
       children: <Widget>[
         _showUserInfo(),
-        Expanded(
-          child: _user.pets.length == 0 ? _noContent() : _getListView()
-        )
+        _showButtons()
       ],
+    );
+  }
+
+  Widget _showButtons() {
+    return Container(
+      margin: const EdgeInsets.only(left: 10, right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Expanded(
+            child: ElevatedButton(
+              child: const Text('Citas'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    return const Color(0xFF004489);
+                  }
+                ),
+              ),
+              onPressed: () => {}
+            ),
+          ),
+          const SizedBox(width: 20,),
+          Expanded(
+            child: ElevatedButton(
+              child: const Text('Mascotas'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    return const Color(0xFF004489);
+                  }
+                ),
+              ),
+              onPressed: () => {}
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -269,14 +305,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  '# Mascotas: ',
+                                  '# Citas: ',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF004489)
                                   )
                                 ),
                                 Text(
-                                  _user.petsCount.toString(),
+                                  _user.appointments.length.toString(),
                                   style: TextStyle(
                                     fontSize: 14
                                   )
@@ -287,14 +323,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  '# Citas: ',
+                                  '# Mascotas: ',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF004489)
                                   )
                                 ),
                                 Text(
-                                  _user.appointments.length.toString(),
+                                  _user.petsCount.toString(),
                                   style: TextStyle(
                                     fontSize: 14
                                   )
@@ -310,36 +346,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               ),
             ],
           ),
-          const Divider(
-            color: Color(0xFF004489), 
-            height: 2
-          ),
         ]
-      )
-    );
-  }
-
-  Widget _getListView() {
-    return RefreshIndicator(
-      onRefresh: _getUser,
-      child: Container(
-        child: Text('Listado de mascotas'),
-      )
-    );
-  }
-
-  Widget _noContent() {
-    return Center(
-      child: Container(
-        margin: EdgeInsets.all(20),
-        child: Text(
-          'El usuario no tiene mascotas registradas',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF004489),
-          ),
-        ),
       )
     );
   }

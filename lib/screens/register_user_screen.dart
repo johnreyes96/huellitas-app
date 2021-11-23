@@ -1,36 +1,29 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
 import 'package:huellitas_app_flutter/models/document_type.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
-import 'package:huellitas_app_flutter/models/token.dart';
-import 'package:huellitas_app_flutter/models/user.dart';
-import 'package:huellitas_app_flutter/screens/change_password_screen.dart';
 import 'package:huellitas_app_flutter/screens/take_picture_screen.dart';
+import 'package:image_picker/image_picker.dart';
 
-class UserScreen extends StatefulWidget {
-  final Token token;
-  final User user;
-  final bool myProfile;
-
-  UserScreen({required this.token, required this.user, required this.myProfile});
+class RegisterUserScreen extends StatefulWidget {
+  const RegisterUserScreen({ Key? key }) : super(key: key);
 
   @override
-  _UserScreenState createState() => _UserScreenState();
+  _RegisterUserScreenState createState() => _RegisterUserScreenState();
 }
 
-class _UserScreenState extends State<UserScreen> {
+class _RegisterUserScreenState extends State<RegisterUserScreen> {
   bool _showLoader = false;
   bool _photoChanged = false;
+  bool _passwordShow = false;
   late XFile _image;
 
   String _firstName = '';
@@ -68,22 +61,29 @@ class _UserScreenState extends State<UserScreen> {
   bool _phoneNumberShowError = false;
   TextEditingController _phoneNumberController = TextEditingController();
 
+  String _password = '';
+  String _passwordError = '';
+  bool _passwordShowError = false;
+  TextEditingController _passwordController = TextEditingController();
+
+  String _confirm = '';
+  String _confirmError = '';
+  bool _confirmShowError = false;
+  TextEditingController _confirmController = TextEditingController();
+
+  
+
   @override
   void initState() {
     super.initState();
     _getDocumentTypes();
-    _loadFieldValues();
   }
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.user.id.isEmpty
-            ? 'Nuevo usuario' 
-            : widget.user.fullName
-        ),
+        title: Text('Nuevo usuario'),
         backgroundColor: const Color(0xFF004489),
       ),
       body: Stack(
@@ -99,6 +99,8 @@ class _UserScreenState extends State<UserScreen> {
                 _showEmail(),
                 _showAddress(),
                 _showPhoneNumber(),
+                _showPassword(),
+                _showConfirm(),
                 _showButtons(),
               ],
             ),
@@ -154,34 +156,12 @@ class _UserScreenState extends State<UserScreen> {
     });
   }
 
-  void _loadFieldValues() {
-    _firstName = widget.user.firstName;
-    _firstNameController.text = _firstName;
-
-    _lastName = widget.user.lastName;
-    _lastNameController.text = _lastName;
-
-    _documentTypeId = widget.user.documentType.id;
-
-    _document = widget.user.document;
-    _documentController.text = _document;
-
-    _address = widget.user.address;
-    _addressController.text = _address;
-
-    _email = widget.user.email;
-    _emailController.text = _email;
-
-    _phoneNumber = widget.user.phoneNumber;
-    _phoneNumberController.text = _phoneNumber;
-  }
-
   Widget _showPhoto() {
     return Stack(
       children: <Widget>[
         Container(
           margin: EdgeInsets.only(top: 10),
-          child: widget.user.id.isEmpty && !_photoChanged
+          child: !_photoChanged
             ? Image(
                 image: AssetImage('assets/no_image.png'),
                 height: 160,
@@ -190,26 +170,12 @@ class _UserScreenState extends State<UserScreen> {
               ) 
             : ClipRRect(
                 borderRadius: BorderRadius.circular(80),
-                child: _photoChanged 
-                ? Image.file(
+                child: Image.file(
                     File(_image.path),
                     height: 160,
                     width: 160,
                     fit: BoxFit.cover,
-                  ) 
-                : CachedNetworkImage(
-                    imageUrl: widget.user.imageFullPath,
-                    errorWidget: (context, url, err) => Icon(Icons.error),
-                    fit: BoxFit.cover,
-                    height: 160,
-                    width: 160,
-                    placeholder: (context, url) => Image(
-                      image: AssetImage('assets/huellitas_logo.png'),
-                      fit: BoxFit.cover,
-                      height: 160,
-                      width: 160,
-                    )
-                  ),
+                  )
               ),        
         ),
         Positioned(
@@ -226,7 +192,7 @@ class _UserScreenState extends State<UserScreen> {
                 child: Icon(
                   Icons.photo_camera,
                   size: 40,
-                  color: Color(0xFF004489)
+                  color: Colors.blue
                 )
               )
             ),
@@ -246,7 +212,7 @@ class _UserScreenState extends State<UserScreen> {
                 child: Icon(
                   Icons.image,
                   size: 40,
-                  color: Color(0xFF004489)
+                  color: Colors.blue
                 )
               )
             ),
@@ -349,7 +315,6 @@ class _UserScreenState extends State<UserScreen> {
     return Container(
       padding: EdgeInsets.all(10),
       child: TextField(
-        enabled: widget.user.id.isEmpty,
         controller: _emailController,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
@@ -412,63 +377,77 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+  Widget _showPassword() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: TextField(
+        obscureText: !_passwordShow,
+        decoration: InputDecoration(
+          hintText: 'Ingresa tu contraseña...',
+          labelText: 'Contraseña',
+          errorText: _passwordShowError ? _passwordError : null,
+          prefixIcon: Icon(Icons.lock),
+          suffixIcon: IconButton(
+            icon: _passwordShow ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+            onPressed: () {
+              setState(() {
+                _passwordShow = !_passwordShow;
+              });
+            },
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10)
+          )
+        ),
+        onChanged: (value) {
+          _password = value;
+        },
+      ),
+    );
+  }
+
+  Widget _showConfirm() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: TextField(
+        obscureText: !_passwordShow,
+        decoration: InputDecoration(
+          hintText: 'Ingresa una confirmación de contraseña...',
+          labelText: 'Confirmación de contraseña',
+          errorText: _confirmShowError ? _confirmError : null,
+          prefixIcon: Icon(Icons.lock),
+          suffixIcon: IconButton(
+            icon: _passwordShow ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+            onPressed: () {
+              setState(() {
+                _passwordShow = !_passwordShow;
+              });
+            },
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10)
+          )
+        ),
+        onChanged: (value) {
+          _confirm = value;
+        },
+      ),
+    );
+  }
+
   Widget _showButtons() {
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Expanded(
-            child: ElevatedButton(
-              child: Text('Guardar'),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    return Color(0xFF004489);
-                  }
-                ),
-              ),
-              onPressed: () => _save(), 
-            ),
-          ),
-          widget.user.id.isEmpty 
-            ? Container() 
-            : SizedBox(width: 20,),
-          widget.user.id.isEmpty 
-            ? Container() 
-            : widget.myProfile
-              ? Expanded(
-                  child: ElevatedButton(
-                    child: Text('Cambiar Contraseña'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return Color(0xFFB4161B);
-                        }
-                      ),
-                    ),
-                    onPressed: () => _changePassword(), 
-                  ),
-                )
-              : Expanded(
-                  child: ElevatedButton(
-                    child: Text('Borrar'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return Color(0xFFB4161B);
-                        }
-                      ),
-                    ),
-                    onPressed: () => _confirmDelete(), 
-                  ),
-                ),
+          _showRegisterButton()
         ],
       ),
     );
   }
 
-  _takePicture() async {
+  void _takePicture() async {
     WidgetsFlutterBinding.ensureInitialized();
     final cameras = await availableCameras();
     final firstCamera = cameras.first;
@@ -486,7 +465,7 @@ class _UserScreenState extends State<UserScreen> {
     }
   }
 
-  _selectPicture() async{
+  void _selectPicture() async{
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
@@ -515,39 +494,28 @@ class _UserScreenState extends State<UserScreen> {
     return list;
   }
 
-  _save() {
+  Widget _showRegisterButton() {
+    return Expanded(
+      child: ElevatedButton(
+        child: Text('Nuevo Usuario'),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              return Color(0xFFFF1E0B);
+            }
+          ),
+        ),
+        onPressed: () => _register(), 
+      ),
+    );
+  }
+
+  void _register() async {
     if (!_validateFields()) {
       return;
     }
 
-    widget.user.id.isEmpty ? _addRecord() : _saveRecord();
-  }
-
-  _changePassword() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChangePasswordScreen(
-          token: widget.token
-        )
-      )
-    );
-  }
-
-  _confirmDelete() async {
-    var response =  await showAlertDialog(
-      context: context,
-      title: 'Confirmación', 
-      message: '¿Estas seguro de querer borrar el registro?',
-      actions: <AlertDialogAction>[
-          AlertDialogAction(key: 'no', label: 'No'),
-          AlertDialogAction(key: 'yes', label: 'Sí'),
-      ]
-    );    
-
-    if (response == 'yes') {
-      _deleteRecord();
-    }
+    _addRecord();
   }
 
   bool _validateFields() {
@@ -613,11 +581,31 @@ class _UserScreenState extends State<UserScreen> {
       _phoneNumberShowError = false;
     }
 
+    if (_password.length < 6) {
+      isValid = false;
+      _passwordShowError = true;
+      _passwordError = 'Debes ingresar una contraseña de al menos 6 carácteres.';
+    } else {
+      _passwordShowError = false;
+    }
+
+    if (_confirm.length < 6) {
+      isValid = false;
+      _confirmShowError = true;
+      _confirmError = 'Debes ingresar una confirmación de contraseña de al menos 6 carácteres.';
+    } else if (_confirm != _password) {
+      isValid = false;
+      _confirmShowError = true;
+      _confirmError = 'La contraseña y la confirmación no son iguales.';
+    } else {
+      _confirmShowError = false;
+    }
+
     setState(() { });
     return isValid;
   }
 
-  _addRecord() async {
+  void _addRecord() async {
     setState(() {
       _showLoader = true;
     });
@@ -654,13 +642,13 @@ class _UserScreenState extends State<UserScreen> {
       'userName': _email,
       'address': _address,
       'phoneNumber': _phoneNumber,
-      'image': base64image
+      'image': base64image,
+      'password': _password
     };
 
-    Response response = await ApiHelper.post(
-      '/api/Users/', 
-      request, 
-      widget.token
+    Response response = await ApiHelper.postNoToken(
+      '/api/Account/', 
+      request
     );
 
     setState(() {
@@ -679,119 +667,14 @@ class _UserScreenState extends State<UserScreen> {
       return;
     }
 
-    Navigator.pop(context, 'yes');
-  }
-
-  _saveRecord() async {
-    setState(() {
-      _showLoader = true;
-    });
-
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      setState(() {
-        _showLoader = false;
-      });
-
-      await showAlertDialog(
-        context: context,
-        title: 'Error',
-        message: 'Verifica que estés conectado a internet.',
-        actions: <AlertDialogAction>[
-          AlertDialogAction(key: null, label: 'Aceptar')
-        ]
-      );
-      return;
-    }
-
-    String base64image = '';
-    if (_photoChanged) {
-      List<int> imageBytes = await _image.readAsBytes();
-      base64image = base64Encode(imageBytes);
-    }
-
-    Map<String, dynamic> request = {
-      'id': widget.user.id,
-      'firstName': _firstName,
-      'lastName': _lastName,
-      'documentTypeId': _documentTypeId,
-      'document': _document,
-      'email': _email,
-      'userName': _email,
-      'address': _address,
-      'phoneNumber': _phoneNumber,
-      'image': base64image
-    };
-
-    Response response = await ApiHelper.put(
-      '/api/Users/', 
-      widget.user.id, 
-      request, 
-      widget.token
-    );
-
-    setState(() {
-      _showLoader = false;
-    });
-
-    if (!response.isSuccess) {
-      await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
-      return;
-    }
-
-    Navigator.pop(context, 'yes');
-  }
-
-  void _deleteRecord() async {
-    setState(() {
-      _showLoader = true;
-    });
-
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      setState(() {
-        _showLoader = false;
-      });
-
-      await showAlertDialog(
-        context: context,
-        title: 'Error',
-        message: 'Verifica que estés conectado a internet.',
-        actions: <AlertDialogAction>[
-          AlertDialogAction(key: null, label: 'Aceptar')
-        ]
-      );
-      return;
-    }
-
-    Response response = await ApiHelper.delete(
-      '/api/Users/', 
-      widget.user.id, 
-      widget.token
-    );
-
-    setState(() {
-      _showLoader = false;
-    });
-
-    if (!response.isSuccess) {
-      await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
-      return;
-    }
+    await showAlertDialog(
+      context: context,
+      title: 'Confirmación', 
+      message: 'Se ha enviado un correo con las instrucciones para activar el usuario. Por favor activelo para poder ingresar a la aplicación',
+      actions: <AlertDialogAction>[
+          AlertDialogAction(key: null, label: 'Aceptar'),
+      ]
+    );    
 
     Navigator.pop(context, 'yes');
   }

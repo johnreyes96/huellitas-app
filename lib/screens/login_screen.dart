@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:http/http.dart' as http;
@@ -6,6 +8,9 @@ import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/constants.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/home_screen.dart';
+import 'package:huellitas_app_flutter/screens/recover_password_screen.dart';
+import 'package:huellitas_app_flutter/screens/register_user_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -43,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 _showEmail(),
                 _showPassword(),
                 _showRememberme(),
+                _showForgotPassword(),
                 _showButtons(),
               ]
             )
@@ -146,17 +152,17 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(width: 20,),
           Expanded(
             child: ElevatedButton(
-              child: const Text('Nuevo Usuario'),
+              child: Text('Nuevo Usuario'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
-                    return const Color(0xFFFF1E0B);
+                    return Color(0xFFFF1E0B);
                   }
                 ),
               ),
-              onPressed: () {}, 
+              onPressed: () => _register(), 
             ),
-          ),
+          )
         ],
       ),
     );
@@ -174,6 +180,23 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _showLoader = true;
     });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: 'Verifica que estés conectado a internet.',
+        actions: <AlertDialogAction>[
+          AlertDialogAction(key: null, label: 'Aceptar')
+        ]
+      );
+      return;
+    }
 
     Map<String, dynamic> request = {
       'userName': _email,
@@ -203,6 +226,10 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     var body = response.body;
+
+    if (_rememberme) {
+      _storeUser(body);
+    }
     var decodedJson = jsonDecode(body);
     var token = Token.fromJson(decodedJson);
     Navigator.pushReplacement(
@@ -243,5 +270,42 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() { });
 
     return isValid;
+  }
+
+  void _storeUser(String body) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isRemembered', true);
+    await prefs.setString('userBody', body);
+  }
+
+  void _register() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegisterUserScreen()
+      )
+    );
+  }
+
+  Widget _showForgotPassword() {
+    return InkWell(
+      onTap: () => _goForgotPassword(),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 20),
+        child: Text(
+          '¿Has olvidado tu contraseña?',
+          style: TextStyle(color: Color(0xFF004489)),
+        ),
+      ),
+    );
+  }
+
+  _goForgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RecoverPasswordScreen()
+      )
+    );
   }
 }

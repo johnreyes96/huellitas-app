@@ -222,8 +222,9 @@ class _UsersScreenState extends State<UsersScreen> {
           ? 'No hay usuarios con ese criterio de búsqueda.'
           : 'No hay usuarios registradas.',
           style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF004489),
           ),
         ),
       ),
@@ -239,39 +240,39 @@ class _UsersScreenState extends State<UsersScreen> {
             child: InkWell(
               onTap: () => _goInfoUser(e),
               child: Container(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.all(5),
                 padding: EdgeInsets.all(5),
                 child: Row(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
+                      borderRadius: BorderRadius.circular(35),
                       child: CachedNetworkImage(
                         imageUrl: e.imageFullPath,
                         errorWidget: (context, url, err) => Icon(Icons.error),
                         fit: BoxFit.cover,
-                        height: 80,
-                        width: 80,
+                        height: 70,
+                        width: 70,
                         placeholder: (context, url) => Image(
                           image: AssetImage('assets/huellitas_logo.png'),
                           fit: BoxFit.cover,
-                          height: 80,
-                          width: 80,
+                          height: 70,
+                          width: 70,
                         )
                       ),
                     ),
                     Expanded(
                       child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Column(
                               children: [
                                 Text(
                                   e.fullName, 
                                   style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004489),
                                   ),
                                 ),
                                 SizedBox(height: 5,),
@@ -281,7 +282,6 @@ class _UsersScreenState extends State<UsersScreen> {
                                     fontSize: 14,
                                   ),
                                 ),
-                                SizedBox(height: 5),
                                 Text(
                                   e.phoneNumber, 
                                   style: TextStyle(
@@ -294,7 +294,10 @@ class _UsersScreenState extends State<UsersScreen> {
                         )
                       )
                     ),
-                    Icon(Icons.arrow_forward_ios)
+                    Icon(
+                      Icons.play_arrow,
+                      color: Color(0xFF004489),
+                    )
                   ]
                 )
               )

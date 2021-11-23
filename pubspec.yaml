@@ -45,6 +45,7 @@ dependencies:
   camera: ^0.9.4
   path_provider: ^2.0.5
   path: ^1.8.0
+  shared_preferences: ^2.0.8
 
 flutter_icons:
   android: "launcher_icon"

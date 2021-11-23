@@ -44,11 +44,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           ? LoaderComponent(text: 'Por favor espere...')
           : _getContent()
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: const Color(0xFF004489),
-        onPressed: () => {}
-      ),
     );
   }
 
@@ -101,10 +96,46 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     return Column(
       children: <Widget>[
         _showUserInfo(),
-        Expanded(
-          child: _user.pets.length == 0 ? _noContent() : _getListView()
-        )
+        _showButtons()
       ],
+    );
+  }
+
+  Widget _showButtons() {
+    return Container(
+      margin: const EdgeInsets.only(left: 10, right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Expanded(
+            child: ElevatedButton(
+              child: const Text('Citas'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    return const Color(0xFF004489);
+                  }
+                ),
+              ),
+              onPressed: () => {}
+            ),
+          ),
+          const SizedBox(width: 20,),
+          Expanded(
+            child: ElevatedButton(
+              child: const Text('Mascotas'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    return const Color(0xFF004489);
+                  }
+                ),
+              ),
+              onPressed: () => {}
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -112,191 +143,205 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     return Container(
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(5),
-      child: Row(
+      child: Column(
         children: <Widget>[
-          Stack(
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: CachedNetworkImage(
-                  imageUrl: _user.imageFullPath,
-                  errorWidget: (context, url, err) => Icon(Icons.error),
-                  fit: BoxFit.cover,
-                  height: 100,
-                  width: 100,
-                  placeholder: (context, url) => Image(
-                    image: AssetImage('assets/huellitas_logo.png'),
-                    fit: BoxFit.cover,
-                    height: 100,
-                    width: 100,
-                  )
-                )
-              ),
-              Positioned(
-                bottom: 0,
-                left: 60,
-                child: InkWell(
-                  onTap: () => _goEdit(),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      color: Colors.green[50],
-                      height: 40,
-                      width: 40,
-                      child: Icon(
-                        Icons.edit,
-                        size: 30,
-                        color: Colors.blue
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: CachedNetworkImage(
+                      imageUrl: _user.imageFullPath,
+                      errorWidget: (context, url, err) => Icon(Icons.error),
+                      fit: BoxFit.cover,
+                      height: 200,
+                      width: 200,
+                      placeholder: (context, url) => Image(
+                        image: AssetImage('assets/huellitas_logo.png'),
+                        fit: BoxFit.cover,
+                        height: 200,
+                        width: 200,
                       )
                     )
                   ),
-                )
-              )
-            ]
-          ),
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              'Email: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.email, 
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              'Tipo documento: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.documentType.description, 
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              'Documento: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.document, 
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              'Dirección: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.address, 
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              'Teléfono: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.phoneNumber, 
-                              style: TextStyle(
-                                fontSize: 14
-                              )
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              '# Mascotas: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.petsCount.toString(),
-                              style: TextStyle(
-                                fontSize: 14
-                              )
-                            ),
-                          ],
+                  Positioned(
+                    bottom: 0,
+                    left: 140,
+                    child: InkWell(
+                      onTap: () => _goEdit(),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: Container(
+                          color: Colors.green[50],
+                          height: 60,
+                          width: 60,
+                          child: Icon(
+                            Icons.edit,
+                            size: 30,
+                            color: Color(0xFF004489)
+                          )
                         )
-                      ]
-                    ),
+                      ),
+                    )
                   )
                 ]
-              )
-            )
-          )
-        ]
-      )
-    );
-  }
-
-  Widget _getListView() {
-    return RefreshIndicator(
-      onRefresh: _getUser,
-      child: Container(
-        child: Text('Listado de mascotas'),
-      )
-    );
-  }
-
-  Widget _noContent() {
-    return Center(
-      child: Container(
-        margin: EdgeInsets.all(20),
-        child: Text(
-          'El usuario no tiene mascotas registradas',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold
+              ),
+            ],
           ),
-        ),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(height: 10),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  'Email: ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004489)
+                                  )
+                                ),
+                                Text(
+                                  _user.email, 
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  'Tipo documento',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004489)
+                                  )
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  _user.documentType.description, 
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  'Documento: ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004489)
+                                  )
+                                ),
+                                Text(
+                                  _user.document, 
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  'Dirección: ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004489)
+                                  )
+                                ),
+                                Text(
+                                  _user.address, 
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  'Teléfono: ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004489)
+                                  )
+                                ),
+                                Text(
+                                  _user.phoneNumber, 
+                                  style: TextStyle(
+                                    fontSize: 14
+                                  )
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  '# Citas: ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004489)
+                                  )
+                                ),
+                                Text(
+                                  _user.appointments.length.toString(),
+                                  style: TextStyle(
+                                    fontSize: 14
+                                  )
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  '# Mascotas: ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004489)
+                                  )
+                                ),
+                                Text(
+                                  _user.petsCount.toString(),
+                                  style: TextStyle(
+                                    fontSize: 14
+                                  )
+                                ),
+                              ],
+                            )
+                          ]
+                        ),
+                      )
+                    ]
+                  )
+                )
+              ),
+            ],
+          ),
+        ]
       )
     );
   }

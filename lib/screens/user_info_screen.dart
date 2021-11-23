@@ -44,11 +44,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           ? LoaderComponent(text: 'Por favor espere...')
           : _getContent()
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: const Color(0xFF004489),
-        onPressed: () => {}
-      ),
     );
   }
 

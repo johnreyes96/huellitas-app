@@ -8,6 +8,7 @@ import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/constants.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/home_screen.dart';
+import 'package:huellitas_app_flutter/screens/recover_password_screen.dart';
 import 'package:huellitas_app_flutter/screens/register_user_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 _showEmail(),
                 _showPassword(),
                 _showRememberme(),
+                _showForgotPassword(),
                 _showButtons(),
               ]
             )
@@ -281,6 +283,28 @@ class _LoginScreenState extends State<LoginScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => RegisterUserScreen()
+      )
+    );
+  }
+
+  Widget _showForgotPassword() {
+    return InkWell(
+      onTap: () => _goForgotPassword(),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 20),
+        child: Text(
+          '¿Has olvidado tu contraseña?',
+          style: TextStyle(color: Color(0xFF004489)),
+        ),
+      ),
+    );
+  }
+
+  _goForgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RecoverPasswordScreen()
       )
     );
   }

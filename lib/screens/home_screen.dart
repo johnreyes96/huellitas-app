@@ -5,6 +5,7 @@ import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/login_screen.dart';
 import 'package:huellitas_app_flutter/screens/user_screen.dart';
 import 'package:huellitas_app_flutter/screens/users_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   final Token token;
@@ -206,14 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white
               )
             ),
-            onTap: () { 
-              Navigator.pushReplacement(
-                context, 
-                MaterialPageRoute(
-                  builder: (context) => const LoginScreen()
-                )
-              );
-            }
+            onTap: () => _logOut()
           )
         ]
       )
@@ -289,16 +283,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white
               )
             ),
-            onTap: () { 
-              Navigator.pushReplacement(
-                context, 
-                MaterialPageRoute(
-                  builder: (context) => const LoginScreen()
-                )
-              );
-            }
+            onTap: () => _logOut()
           )
         ]
+      )
+    );
+  }
+
+  void _logOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isRemembered', false);
+    await prefs.setString('userBody', '');
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginScreen()
       )
     );
   }

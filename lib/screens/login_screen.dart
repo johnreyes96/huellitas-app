@@ -8,6 +8,7 @@ import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/constants.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/home_screen.dart';
+import 'package:huellitas_app_flutter/screens/register_user_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -149,17 +150,17 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(width: 20,),
           Expanded(
             child: ElevatedButton(
-              child: const Text('Nuevo Usuario'),
+              child: Text('Nuevo Usuario'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
-                    return const Color(0xFFFF1E0B);
+                    return Color(0xFFFF1E0B);
                   }
                 ),
               ),
-              onPressed: () {}, 
+              onPressed: () => _register(), 
             ),
-          ),
+          )
         ],
       ),
     );
@@ -273,5 +274,14 @@ class _LoginScreenState extends State<LoginScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isRemembered', true);
     await prefs.setString('userBody', body);
+  }
+
+  void _register() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegisterUserScreen()
+      )
+    );
   }
 }

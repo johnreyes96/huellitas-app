@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:huellitas_app_flutter/models/token.dart';
+import 'package:huellitas_app_flutter/screens/document_types_screen.dart';
 import 'package:huellitas_app_flutter/screens/login_screen.dart';
 import 'package:huellitas_app_flutter/screens/users_screen.dart';
 
@@ -113,7 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white
               )
             ),
-            onTap: () { }
+            onTap: () { 
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => DocumentTypesScreen(token: widget.token,)
+                )
+              );
+            },
           ),
           ListTile(
             leading: const Icon(

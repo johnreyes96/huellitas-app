@@ -21,6 +21,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         title: Text(
           'Vista previa de la foto'
         ),
+        backgroundColor: const Color(0xFF004489),
       ),
       body: Column(
         children: [
@@ -39,7 +40,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
-                          return Color(0xFF120E43);
+                          return Color(0xFF004489);
                         }
                       ),
                     ),
@@ -56,7 +57,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
-                          return Color(0xFFE03B8B);
+                          return Color(0xFFFF1E0B);
                         }
                       ),
                     ),

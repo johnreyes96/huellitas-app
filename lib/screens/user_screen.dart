@@ -226,7 +226,7 @@ class _UserScreenState extends State<UserScreen> {
                 child: Icon(
                   Icons.photo_camera,
                   size: 40,
-                  color: Colors.blue
+                  color: Color(0xFF004489)
                 )
               )
             ),
@@ -246,7 +246,7 @@ class _UserScreenState extends State<UserScreen> {
                 child: Icon(
                   Icons.image,
                   size: 40,
-                  color: Colors.blue
+                  color: Color(0xFF004489)
                 )
               )
             ),
@@ -313,7 +313,7 @@ class _UserScreenState extends State<UserScreen> {
               });
             },
             decoration: InputDecoration(
-              hintText: 'Seleccione un tipo de documento...',
+              hintText: 'Seleccione tipo documento...',
               labelText: 'Tipo documento',
               errorText: _documentTypeIdShowError ? _documentTypeIdError : null,
               border: OutlineInputBorder(
@@ -501,7 +501,7 @@ class _UserScreenState extends State<UserScreen> {
     List<DropdownMenuItem<int>> list = [];
 
     list.add(DropdownMenuItem(
-      child: Text('Seleccione un tipo de documento...'),
+      child: Text('Seleccione tipo documento...'),
       value: 0,
     ));
 

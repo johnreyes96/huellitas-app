@@ -5,6 +5,7 @@ import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/appointment_types_screen.dart';
 import 'package:huellitas_app_flutter/screens/document_types_screen.dart';
 import 'package:huellitas_app_flutter/screens/login_screen.dart';
+import 'package:huellitas_app_flutter/screens/services_screen.dart';
 import 'package:huellitas_app_flutter/screens/user_screen.dart';
 import 'package:huellitas_app_flutter/screens/users_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,7 +104,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white
               )
             ),
-            onTap: () { }
+            onTap: () { 
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => ServicesScreen(token: widget.token,)
+                )
+              );
+            },
           ),
           ListTile(
             leading: const Icon(

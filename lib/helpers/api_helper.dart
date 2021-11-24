@@ -5,6 +5,7 @@ import 'package:huellitas_app_flutter/helpers/constants.dart';
 import 'package:huellitas_app_flutter/models/appointment_type.dart';
 import 'package:huellitas_app_flutter/models/document_type.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
+import 'package:huellitas_app_flutter/models/service.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/models/user.dart';
 
@@ -209,6 +210,38 @@ class ApiHelper {
     if (decodedJson != null) {
       for (var item in decodedJson) {
         list.add(AppointmentType.fromJson(item));
+      }
+    }
+
+    return Response(isSuccess: true, result: list);
+  }
+
+
+  static Future<Response> getServices(Token token) async {
+    if (!_validToken(token)) {
+      return Response(isSuccess: false, message: 'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
+    }
+    
+    var url = Uri.parse('${Constants.apiUrl}/api/Services');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-type' : 'application/json',
+        'accept' : 'application/json',
+        'authorization': 'bearer ${token.token}',
+      },
+    );
+
+    var body = response.body;
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    List<Service> list = [];    
+    var decodedJson = jsonDecode(body);
+    if (decodedJson != null) {
+      for (var item in decodedJson) {
+        list.add(Service.fromJson(item));
       }
     }
 

@@ -5,6 +5,7 @@ import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/appointment_types_screen.dart';
 import 'package:huellitas_app_flutter/screens/document_types_screen.dart';
 import 'package:huellitas_app_flutter/screens/login_screen.dart';
+import 'package:huellitas_app_flutter/screens/pet_types_screen.dart';
 import 'package:huellitas_app_flutter/screens/services_screen.dart';
 import 'package:huellitas_app_flutter/screens/user_screen.dart';
 import 'package:huellitas_app_flutter/screens/users_screen.dart';
@@ -167,7 +168,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white
               )
             ),
-            onTap: () { }
+            onTap: () { 
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => PetTypesScreen(token: widget.token,)
+                )
+              );
+            },
           ),
           ListTile(
             leading: const Icon(

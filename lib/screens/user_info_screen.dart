@@ -9,13 +9,16 @@ import 'package:huellitas_app_flutter/models/pet_type.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/models/user.dart';
+import 'package:huellitas_app_flutter/screens/pets_screen.dart';
 import 'package:huellitas_app_flutter/screens/user_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
   final Token token;
   final User user;
+  final bool isAdmin;
 
-  UserInfoScreen({required this.token, required this.user});
+  // ignore: use_key_in_widget_constructors
+  const UserInfoScreen({required this.token, required this.user, required this.isAdmin});
 
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
@@ -131,12 +134,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   }
                 ),
               ),
-              onPressed: () => {}
+              onPressed: () => _goPets()
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _goPets() async {
+    String? result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PetsScreen(
+        token: widget.token,
+        user: _user,
+        isAdmin: widget.isAdmin,
+      ))
+    );
+    if (result == 'yes') {
+      _getUser();
+    }
   }
 
   Widget _showUserInfo() {

@@ -272,91 +272,94 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
   }
 
   Widget _getListView() {
-    return ListView(
-      children: _billing.billingDetails.map((e) {
-        return Card(
-          child: InkWell(
-            onTap: () => _goBillingDetails(e),
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              padding: const EdgeInsets.all(5),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Text(
-                                e.service.description,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF004489)
+    return RefreshIndicator(
+      onRefresh: _getBilling,
+      child: ListView(
+        children: _billing.billingDetails.map((e) {
+          return Card(
+            child: InkWell(
+              onTap: () => _goBillingDetails(e),
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(5),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                Text(
+                                  e.service.description,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004489)
+                                  ),
                                 ),
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Valor unitario: ${NumberFormat.currency(symbol: '\$').format(e.unitValue)}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'Valor unitario: ${NumberFormat.currency(symbol: '\$').format(e.unitValue)}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
                                     ),
-                                  ),
-                                ]
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Cantidad: ${e.quantity}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
+                                  ]
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'Cantidad: ${e.quantity}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
                                     ),
-                                  ),
-                                ]
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Total: ${NumberFormat.currency(symbol: '\$').format(e.valueSubtotal)}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
+                                  ]
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'Total: ${NumberFormat.currency(symbol: '\$').format(e.valueSubtotal)}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
                                     ),
-                                  ),
-                                ]
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    '# Detalles del servicio: ${e.serviceDetails.length}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
+                                  ]
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '# Detalles del servicio: ${e.serviceDetails.length}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
                                     ),
-                                  ),
-                                ]
-                              ),
-                            ]
-                          )
-                        ]
+                                  ]
+                                ),
+                              ]
+                            )
+                          ]
+                        )
                       )
-                    )
-                  ),
-                  widget.isAdmin
-                  ? const Icon(
-                      Icons.play_arrow,
-                      size: 40,
-                      color: Color(0xFF004489)
-                    )
-                  : Container()
-                ]
+                    ),
+                    widget.isAdmin
+                    ? const Icon(
+                        Icons.play_arrow,
+                        size: 40,
+                        color: Color(0xFF004489)
+                      )
+                    : Container()
+                  ]
+                )
               )
             )
-          )
-        );
-      }).toList(),
+          );
+        }).toList(),
+      ),
     );
   }
 

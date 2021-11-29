@@ -196,6 +196,24 @@ class _PetInfoScreenState extends State<PetInfoScreen> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: <Widget>[
+                            const Text(
+                              '# Facturas: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF004489)
+                              )
+                            ),
+                            Text(
+                              _pet.billingsCount.toString(),
+                              style: const TextStyle(
+                                fontSize: 14
+                              )
+                            ),
+                          ],
+                        )
                       ]
                     ),
                   )

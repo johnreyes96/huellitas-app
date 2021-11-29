@@ -4,11 +4,13 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
+import 'package:huellitas_app_flutter/models/billing.dart';
 import 'package:huellitas_app_flutter/models/pet.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/models/user.dart';
 import 'package:huellitas_app_flutter/screens/pet_screen.dart';
+import 'package:intl/intl.dart';
 
 class PetInfoScreen extends StatefulWidget {
   final Token token;
@@ -49,7 +51,7 @@ class _PetInfoScreenState extends State<PetInfoScreen> {
         FloatingActionButton(
           child: const Icon(Icons.add),
           backgroundColor: const Color(0xFF004489),
-          onPressed: () => {}
+          onPressed: () => _addBilling()
         )
       : Container()
     );
@@ -222,7 +224,74 @@ class _PetInfoScreenState extends State<PetInfoScreen> {
   }
 
   Widget _getListView() {
-    return Container(child: Text('Facturas'));
+    return RefreshIndicator(
+      onRefresh: _getPet,
+      child: ListView(
+        children: _pet.billings.map((e) {
+          return Card(
+            child: InkWell(
+              onTap: () => _goBilling(e),
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(5),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                Text(
+                                  DateFormat('yyyy-MM-dd').format(DateTime.parse(e.dateLocal)),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004489)
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'Total: ${NumberFormat.currency(symbol: '\$').format(e.totalValue)}',
+                                      style: TextStyle(
+                                        fontSize: 14
+                                      ),
+                                    ),
+                                  ]
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '# Servicios: ${e.billingDetailsCount}',
+                                      style: TextStyle(
+                                        fontSize: 14
+                                      ),
+                                    ),
+                                  ]
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      )
+                    ),
+                    Icon(
+                      Icons.play_arrow,
+                      size: 40,
+                      color: Color(0xFF004489)
+                    )
+                  ]
+                )
+              )
+            )
+          );
+        }).toList(),
+      )
+    );
   }
 
   void _goEdit() async {
@@ -236,9 +305,6 @@ class _PetInfoScreenState extends State<PetInfoScreen> {
         )
       )
     );
-    if (result == 'yes') {
-      await _getPet();
-    }
   }
 
   Future<void> _getPet() async {
@@ -285,4 +351,57 @@ class _PetInfoScreenState extends State<PetInfoScreen> {
       _pet = response.result;
     });
   }
+
+  void _addBilling() async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: 'Verifica que estés conectado a internet.',
+        actions: <AlertDialogAction>[
+          const AlertDialogAction(key: null, label: 'Aceptar')
+        ]
+      );
+      return;
+    }
+
+    Map<String, dynamic> request = {
+      'petId': widget.pet.id,
+    };
+
+    Response response = await ApiHelper.post(
+      '/api/Billings/',
+      request,
+      widget.token
+    );
+
+    setState(() {
+      _showLoader = false;
+    });
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: response.message,
+        actions: <AlertDialogAction>[
+          const AlertDialogAction(key: null, label: 'Aceptar')
+        ]
+      );
+      return;
+    }
+
+    await _getPet();
+  }
+
+  _goBilling(Billing e) {}
 }

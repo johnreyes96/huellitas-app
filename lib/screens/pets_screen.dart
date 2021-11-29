@@ -256,7 +256,7 @@ class _PetsScreenState extends State<PetsScreen> {
                         Row(
                           children: <Widget>[
                             const Text(
-                              '# Vehículos: ',
+                              '# Mascotas: ',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF004489)

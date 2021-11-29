@@ -351,7 +351,7 @@ class _PetScreenState extends State<PetScreen> {
             options: CarouselOptions(
               height: 200,
               autoPlay: true,
-              autoPlayInterval: Duration(seconds: 3),
+              autoPlayInterval: const Duration(seconds: 3),
               enlargeCenterPage: true,
               onPageChanged: (index, reason) {
                 setState(() {
@@ -511,9 +511,48 @@ class _PetScreenState extends State<PetScreen> {
     );
   }
 
-  _goAddPhoto() {}
+  void _goAddPhoto() async {
+    var response = await showAlertDialog(
+      context: context,
+      title: 'Confirmación',
+      message: '¿De donde deseas obtener la imagen?',
+      actions: <AlertDialogAction>[
+        const AlertDialogAction(key: 'cancel', label: 'Cancelar'),
+        const AlertDialogAction(key: 'camera', label: 'Cámara'),
+        const AlertDialogAction(key: 'gallery', label: 'Imágenes'),
+      ]
+    );
 
-  _confirmDeletePhoto() {}
+    if (response == 'cancel') {
+      return;
+    }
+
+    if (response == 'camera') {
+      await _takePicture();
+    } else {
+      await _selectPicture();
+    }
+
+    if (_photoChanged) {
+      _addPicture();
+    }
+  }
+
+  void _confirmDeletePhoto() async {
+    var response = await showAlertDialog(
+      context: context,
+      title: 'Confirmación',
+      message: '¿Estás seguro de querer borar la última foto tomada?',
+      actions: <AlertDialogAction>[
+        const AlertDialogAction(key: 'no', label: 'No'),
+        const AlertDialogAction(key: 'yes', label: 'Si')
+      ]
+    );
+
+    if (response == 'yes') {
+      _deletePhoto();
+    }
+  }
 
   List<DropdownMenuItem<int>> _getComboPetTypes() {
     List<DropdownMenuItem<int>> list = [];
@@ -580,6 +619,18 @@ class _PetScreenState extends State<PetScreen> {
 
   void _loadFieldValues() {
     _petTypeId = widget.pet.petType.id;
+    
+    _name = widget.pet.name;
+    _nameController.text = _name;
+    
+    _race = widget.pet.race;
+    _raceController.text = _race;
+    
+    _color = widget.pet.color;
+    _colorController.text = _color;
+    
+    _observations = widget.pet.observations == null ? '' : widget.pet.observations!;
+    _observationsController.text = _observations;
   }
 
   void _save() {
@@ -721,11 +772,11 @@ class _PetScreenState extends State<PetScreen> {
     }
 
     Map<String, dynamic> request = {
-      'vehicleTypeId': _petTypeId,
+      'petTypeId': _petTypeId,
+      'userId': widget.user.id,
       'name': _name,
       'race': _race,
       'color': _color,
-      'userId': widget.user.id,
       'observations': _observations,
       'image': base64Image,
     };
@@ -785,7 +836,7 @@ class _PetScreenState extends State<PetScreen> {
 
     Map<String, dynamic> request = {
       'id': widget.pet.id,
-      'vehicleTypeId': _petTypeId,
+      'petTypeId': _petTypeId,
       'name': _name,
       'race': _race,
       'color': _color,
@@ -798,6 +849,107 @@ class _PetScreenState extends State<PetScreen> {
       '/api/Pets/',
       widget.pet.id.toString(),
       request,
+      widget.token
+    );
+
+    setState(() {
+      _showLoader = false;
+    });
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: response.message,
+        actions: <AlertDialogAction>[
+          const AlertDialogAction(key: null, label: 'Aceptar')
+        ]
+      );
+      return;
+    }
+
+    Navigator.pop(context, 'yes');
+  }
+
+  void _addPicture() async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: 'Verifica que estés conectado a internet.',
+        actions: <AlertDialogAction>[
+          const AlertDialogAction(key: null, label: 'Aceptar')
+        ]
+      );
+      return;
+    }
+
+    List<int> imageBytes = await _image.readAsBytes();
+    String base64Image = base64Encode(imageBytes);
+    Map<String, dynamic> request = {
+      'petId': widget.pet.id,
+      'image': base64Image
+    };
+
+    Response response = await ApiHelper.post(
+      '/api/PetPhotoes',
+      request,
+      widget.token
+    );
+
+    setState(() {
+      _showLoader = false;
+    });
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+        context: context,
+        title: 'Error', 
+        message: response.message,
+        actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+        ]
+      );    
+      return;
+    }
+
+    Navigator.pop(context, 'yes');
+  }
+
+  void _deletePhoto() async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: 'Verifica que estés conectado a internet.',
+        actions: <AlertDialogAction>[
+          const AlertDialogAction(key: null, label: 'Aceptar')
+        ]
+      );
+      return;
+    }
+
+    Response response = await ApiHelper.delete(
+      '/api/PetPhotoes/',
+      widget.pet.petPhotos[widget.pet.petPhotos.length - 1].id.toString(),
       widget.token
     );
 

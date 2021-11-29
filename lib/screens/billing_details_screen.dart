@@ -13,6 +13,7 @@ import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/models/user.dart';
 import 'package:huellitas_app_flutter/screens/billing_detail_screen.dart';
 import 'package:huellitas_app_flutter/screens/pet_screen.dart';
+import 'package:huellitas_app_flutter/screens/service_detail_screen.dart';
 import 'package:intl/intl.dart';
 
 class BillingDetailsScreen extends StatefulWidget {
@@ -58,7 +59,10 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
       ? FloatingActionButton(
         child: const Icon(Icons.add),
         backgroundColor: const Color(0xFF004489),
-        onPressed: () => {}
+        onPressed: () => _goAddServiceDetail(ServiceDetail(
+          id: 0,
+          description: ''
+        ))
       )
       : Container()
     );
@@ -307,7 +311,21 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
     );
   }
 
-  _goServiceDetail(ServiceDetail e) {}
+  void _goServiceDetail(ServiceDetail serviceDetail) async {
+    if (!widget.isAdmin) {
+      return;
+    }
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ServiceDetailScreen(
+        token: widget.token,
+        billingDetail: widget.billingDetail,
+        serviceDetail: serviceDetail,
+      ))
+    );
+  }
 
   _goEditBillingDetail() async {
     await Navigator.push(
@@ -367,5 +385,23 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
     setState(() {
       _billingDetail = response.result;
     });
+  }
+
+  void _goAddServiceDetail(ServiceDetail serviceDetail) async {
+    if (!widget.isAdmin) {
+      return;
+    }
+
+    String? result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ServiceDetailScreen(
+        token: widget.token,
+        billingDetail: widget.billingDetail,
+        serviceDetail: serviceDetail,
+      ))
+    );
+    if (result == 'yes') {
+    }
   }
 }

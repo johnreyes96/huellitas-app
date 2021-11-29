@@ -56,7 +56,7 @@ class _BillingDetailScreenState extends State<BillingDetailScreen> {
       appBar: AppBar(
         title: Text(
           widget.billingDetail.id == 0
-            ? 'Nuevo detalle servicio' 
+            ? 'Nuevo detalle factura' 
             : widget.billingDetail.service.description
         ),
         backgroundColor: const Color(0xFF004489),

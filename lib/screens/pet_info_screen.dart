@@ -2,6 +2,8 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
 import 'package:huellitas_app_flutter/models/billing.dart';
@@ -11,7 +13,6 @@ import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/models/user.dart';
 import 'package:huellitas_app_flutter/screens/billing_info_screen.dart';
 import 'package:huellitas_app_flutter/screens/pet_screen.dart';
-import 'package:intl/intl.dart';
 
 class PetInfoScreen extends StatefulWidget {
   final Token token;

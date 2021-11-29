@@ -2,6 +2,8 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
 import 'package:huellitas_app_flutter/models/billing.dart';
@@ -14,7 +16,6 @@ import 'package:huellitas_app_flutter/models/user.dart';
 import 'package:huellitas_app_flutter/screens/billing_detail_screen.dart';
 import 'package:huellitas_app_flutter/screens/billing_details_screen.dart';
 import 'package:huellitas_app_flutter/screens/pet_screen.dart';
-import 'package:intl/intl.dart';
 
 class BillingInfoScreen extends StatefulWidget {
   final Token token;
@@ -230,6 +231,24 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: <Widget>[
+                            const Text(
+                              '# Detalles de factura: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF004489)
+                              )
+                            ),
+                            Text(
+                              _pet.billingsCount.toString(),
+                              style: const TextStyle(
+                                fontSize: 14
+                              )
+                            ),
+                          ],
+                        )
                       ]
                     ),
                   )

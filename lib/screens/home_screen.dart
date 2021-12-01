@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/appointment_types_screen.dart';
+import 'package:huellitas_app_flutter/screens/appointments_screen.dart';
 import 'package:huellitas_app_flutter/screens/document_types_screen.dart';
 import 'package:huellitas_app_flutter/screens/login_screen.dart';
 import 'package:huellitas_app_flutter/screens/pet_types_screen.dart';
@@ -137,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           ListTile(
             leading: const Icon(
-              Icons.event,
+              Icons.content_copy,
               color: Colors.white
             ),
             tileColor: const Color(0xFF004489),
@@ -152,6 +153,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 context, 
                 MaterialPageRoute(
                   builder: (context) => AppointmentTypesScreen(token: widget.token,)
+                )
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.event,
+              color: Colors.white
+            ),
+            tileColor: const Color(0xFF004489),
+            title: const Text(
+              'Citas',
+              style: TextStyle(
+                color: Colors.white
+              )
+            ),
+            onTap: () { 
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => AppointmentsScreen()
                 )
               );
             },

@@ -1,17 +1,18 @@
-import 'package:flutter/foundation.dart';
 
-@immutable
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 class Event {
-  final String title;
+  final String description;
+  final DateTime from;
+  final Color backgroundColor;
 
-  const Event({this.title = "Title"});
-
-  @override
-  bool operator ==(Object other) => other is Event && title == other.title;
-
-  @override
-  int get hashCode => super.hashCode;
-
-  @override
-  String toString() => title;
+  const Event({
+    required this.description,
+    required this.from,
+    this.backgroundColor = Colors.lightGreen,
+  });
 }
+
+
+

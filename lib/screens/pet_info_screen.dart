@@ -322,6 +322,7 @@ class _PetInfoScreenState extends State<PetInfoScreen> {
           token: widget.token, 
           user: widget.user,
           pet: _pet,
+          isAdmin: widget.isAdmin,
         )
       )
     );

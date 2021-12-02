@@ -21,9 +21,10 @@ class PetScreen extends StatefulWidget {
   final Token token;
   final User user;
   final Pet pet;
+  final bool isAdmin;
 
   // ignore: use_key_in_widget_constructors
-  const PetScreen({required this.token, required this.user, required this.pet});
+  const PetScreen({required this.token, required this.user, required this.pet, required this.isAdmin});
 
   @override
   _PetScreenState createState() => _PetScreenState();
@@ -243,19 +244,21 @@ class _PetScreenState extends State<PetScreen> {
             : const SizedBox(width: 20,),
           widget.pet.id == 0
             ? Container()
-            : Expanded(
-              child: ElevatedButton(
-                child: const Text('Borrar'),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                    (Set<MaterialState> states) {
-                      return const Color(0xFFB4161B);
-                    }
+            : widget.isAdmin
+              ? Expanded(
+                  child: ElevatedButton(
+                    child: const Text('Borrar'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          return const Color(0xFFB4161B);
+                        }
+                      )
+                    ),
+                    onPressed: () => _confirmDelete()
                   )
-                ),
-                onPressed: () => _confirmDelete()
-              )
-            )
+                )
+              : Container()
         ],
       ),
     );

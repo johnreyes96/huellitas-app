@@ -260,7 +260,6 @@ class _UserScreenState extends State<UserScreen> {
     return Container(
       padding: EdgeInsets.all(10),
       child: TextField(
-        autofocus: true,
         controller: _firstNameController,
         decoration: InputDecoration(
           hintText: 'Ingresa nombres...',
@@ -439,6 +438,19 @@ class _UserScreenState extends State<UserScreen> {
             : widget.myProfile
               ? Expanded(
                   child: ElevatedButton(
+                    child: Text('Borrar'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          return Color(0xFFB4161B);
+                        }
+                      ),
+                    ),
+                    onPressed: () => _confirmDelete(), 
+                  ),
+                )
+              : Expanded(
+                  child: ElevatedButton(
                     child: Text('Cambiar Contraseña'),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
@@ -450,19 +462,6 @@ class _UserScreenState extends State<UserScreen> {
                     onPressed: () => _changePassword(), 
                   ),
                 )
-              : Expanded(
-                  child: ElevatedButton(
-                    child: Text('Borrar'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return Color(0xFFB4161B);
-                        }
-                      ),
-                    ),
-                    onPressed: () => _confirmDelete(), 
-                  ),
-                ),
         ],
       ),
     );

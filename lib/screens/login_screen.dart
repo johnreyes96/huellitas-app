@@ -70,7 +70,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return Container(
       padding: const EdgeInsets.all(10),
       child: TextField(
-        autofocus: true,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           hintText: 'Ingresa tu email...',

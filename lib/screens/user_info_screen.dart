@@ -2,10 +2,9 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
-import 'package:huellitas_app_flutter/models/pet.dart';
-import 'package:huellitas_app_flutter/models/pet_type.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/models/user.dart';
@@ -307,7 +306,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   )
                                 ),
                                 Text(
-                                  _user.phoneNumber, 
+                                  '+ ${_user.phoneNumber}',
                                   style: TextStyle(
                                     fontSize: 14
                                   )
@@ -371,7 +370,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         builder: (context) => UserScreen(
           token: widget.token, 
           user: _user,
-          myProfile: false,
+          myProfile: widget.isAdmin,
         )
       )
     );

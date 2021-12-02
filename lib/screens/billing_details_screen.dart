@@ -218,26 +218,28 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
                       ]
                     ),
                   ),
-                  Positioned(
-                    bottom: 0,
-                    left: 80,
-                    child: InkWell(
-                      onTap: () => _goEditBillingDetail(),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Container(
-                          color: Colors.green[50],
-                          height: 40,
-                          width: 40,
-                          child: const Icon(
-                            Icons.edit,
-                            size: 30,
-                            color: Color(0xFF004489)
+                  widget.isAdmin
+                  ? Positioned(
+                      bottom: 0,
+                      left: 80,
+                      child: InkWell(
+                        onTap: () => _goEditBillingDetail(),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: Container(
+                            color: Colors.green[50],
+                            height: 40,
+                            width: 40,
+                            child: const Icon(
+                              Icons.edit,
+                              size: 30,
+                              color: Color(0xFF004489)
+                            )
                           )
-                        )
-                      ),
+                        ),
+                      )
                     )
-                  )
+                  : Container()
                 ]
               )
             )
@@ -255,6 +257,7 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
           token: widget.token, 
           user: widget.user,
           pet: _pet,
+          isAdmin: widget.isAdmin,
         )
       )
     );

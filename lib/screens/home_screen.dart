@@ -7,6 +7,7 @@ import 'package:huellitas_app_flutter/screens/document_types_screen.dart';
 import 'package:huellitas_app_flutter/screens/login_screen.dart';
 import 'package:huellitas_app_flutter/screens/pet_types_screen.dart';
 import 'package:huellitas_app_flutter/screens/services_screen.dart';
+import 'package:huellitas_app_flutter/screens/user_info_screen.dart';
 import 'package:huellitas_app_flutter/screens/user_screen.dart';
 import 'package:huellitas_app_flutter/screens/users_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,7 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
               'Bienvenid@ ${widget.token.user.fullName}',
               style: const TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF004489)
               )
             )
           )
@@ -221,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context) => UserScreen(
                     token: widget.token,
                     user: widget.token.user,
-                    myProfile: true
+                    myProfile: false
                   )
                 )
               );
@@ -272,7 +274,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white
               )
             ),
-            onTap: () { }
+            onTap: () {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => UserInfoScreen(
+                    token: widget.token,
+                    user: widget.token.user,
+                    isAdmin: false
+                  )
+                )
+              );
+            }
           ),
           const Divider(
             color: Colors.black, 
@@ -297,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context) => UserScreen(
                     token: widget.token,
                     user: widget.token.user,
-                    myProfile: true
+                    myProfile: false
                   )
                 )
               );

@@ -283,7 +283,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   ),
                                 ),
                                 Text(
-                                  e.phoneNumber, 
+                                  '+ ${e.phoneNumber}',
                                   style: TextStyle(
                                     fontSize: 14
                                   )

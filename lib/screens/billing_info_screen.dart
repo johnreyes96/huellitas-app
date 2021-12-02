@@ -57,17 +57,17 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
       ),
       floatingActionButton: widget.isAdmin
       ? FloatingActionButton(
-        child: const Icon(Icons.add),
-        backgroundColor: const Color(0xFF004489),
-        onPressed: () => _goBillingDetail(BillingDetail(
-          id: 0,
-          quantity: 0,
-          unitValue: 0,
-          valueSubtotal: 0,
-          service: Service(id: 0, description: ''),
-          serviceDetails: []
-        ))
-      )
+          child: const Icon(Icons.add),
+          backgroundColor: const Color(0xFF004489),
+          onPressed: () => _goBillingDetail(BillingDetail(
+            id: 0,
+            quantity: 0,
+            unitValue: 0,
+            valueSubtotal: 0,
+            service: Service(id: 0, description: ''),
+            serviceDetails: []
+          ))
+        )
       : Container()
     );
   }
@@ -269,6 +269,7 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
           token: widget.token, 
           user: widget.user,
           pet: _pet,
+          isAdmin: widget.isAdmin,
         )
       )
     );
@@ -428,10 +429,6 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
   }
 
   void _goBillingDetails(BillingDetail billingDetail) async {
-    if (!widget.isAdmin) {
-      return;
-    }
-
     String? result = await Navigator.push(
       context,
       MaterialPageRoute(

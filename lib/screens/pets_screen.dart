@@ -131,7 +131,8 @@ class _PetsScreenState extends State<PetsScreen> {
         builder: (context) => PetScreen(
         token: widget.token,
         user: _user,
-        pet: pet
+        pet: pet,
+        isAdmin: widget.isAdmin,
       ))
     );
     if (result == 'yes') {
@@ -246,7 +247,7 @@ class _PetsScreenState extends State<PetsScreen> {
                               )
                             ),
                             Text(
-                              '+${_user.phoneNumber}', 
+                              '+ ${_user.phoneNumber}', 
                               style: const TextStyle(
                                 fontSize: 14
                               )
@@ -392,7 +393,7 @@ class _PetsScreenState extends State<PetsScreen> {
         builder: (context) => UserScreen(
           token: widget.token, 
           user: _user,
-          myProfile: false,
+          myProfile: widget.isAdmin,
         )
       )
     );

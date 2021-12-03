@@ -3,6 +3,9 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/constants.dart';
@@ -36,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFccdbeb),
       body: Stack(
         children: <Widget>[
           SingleChildScrollView(
@@ -62,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _showLogo() {
     return const Image(
       image: AssetImage('assets/huellitas_logo.png'),
-      width: 300
+      width: 200
     );
   }
 
@@ -72,6 +76,8 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
           hintText: 'Ingresa tu email...',
           labelText: 'Email',
           errorText: _emailShowError ? _emailError : null,
@@ -94,6 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextField(
         obscureText: !_passwordShow,
         decoration: InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
           hintText: 'Ingresa tu contraseña...',
           labelText: 'Contraseña',
           errorText: _passwordShowError ? _passwordError : null,
@@ -128,40 +136,22 @@ class _LoginScreenState extends State<LoginScreen> {
       }, 
     );
   }
-
+  
   Widget _showButtons() {
     return Container(
-      margin: const EdgeInsets.only(left: 10, right: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Expanded(
-            child: ElevatedButton(
-              child: const Text('Iniciar Sesión'),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    return const Color(0xFF004489);
-                  }
-                ),
-              ),
-              onPressed: () => _login()
-            ),
+      margin: EdgeInsets.only(left: 10, right: 10),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _showLoginButton(),
+              SizedBox(width: 20),
+              _showRegisterButton()
+            ],
           ),
-          const SizedBox(width: 20,),
-          Expanded(
-            child: ElevatedButton(
-              child: Text('Nuevo Usuario'),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    return Color(0xFFFF1E0B);
-                  }
-                ),
-              ),
-              onPressed: () => _register(), 
-            ),
-          )
+          _showGoogleLoginButton(),
+          _showFacebookLoginButton(),
         ],
       ),
     );
@@ -306,5 +296,205 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (context) => RecoverPasswordScreen()
       )
     );
+  }
+
+  Widget _showGoogleLoginButton() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () => _loginGoogle(),
+            icon: FaIcon(
+              FontAwesomeIcons.google,
+              color: Colors.red,
+            ),
+            label: Text('Iniciar sesión con Google'),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              onPrimary: Colors.black
+            )
+          )
+        )
+      ],
+    );
+  }
+
+  void _loginGoogle() async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    var googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
+    var user = await googleSignIn.signIn();
+
+    Map<String, dynamic> request = {
+      'email': user?.email,
+      'id': user?.id,
+      'loginType': 1,
+      'fullname': user?.displayName,
+      'photoURL': user?.photoUrl,
+    };
+
+    if (user == null) {
+      setState(() {
+        _showLoader = false;
+      });
+ 
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: 'Hubo un problema al obtener el usuario de Google, por favor intenta más tarde.',
+        actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+        ]
+      );    
+      return;
+    }
+
+    await _socialLogin(request);
+  }
+
+  Future _socialLogin(Map<String, dynamic> request) async {
+    var url = Uri.parse('${Constants.apiUrl}/api/account/SocialLogin');
+    var response = await http.post(
+      url,
+      headers: {
+        'content-Type': 'application/json',
+        'accept': 'application/json'
+      },
+      body: jsonEncode(request)
+    );
+
+    setState(() {
+      _showLoader = false;
+    });
+
+    if (response.statusCode >= 400) {
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: 'El usuario ya inició sesión previamente por email o por otra red social',
+        actions: <AlertDialogAction>[
+          AlertDialogAction(key: null, label: 'Aceptar')
+        ]
+      );
+      return;
+    }
+
+    var body = response.body;
+
+    if (_rememberme) {
+      _storeUser(body);
+    }
+
+    var decodedJson = jsonDecode(body);
+    var token = Token.fromJson(decodedJson);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(token: token)
+      )
+    );
+  }
+
+  Widget _showLoginButton() {
+    return Expanded(
+      child: ElevatedButton(
+        child: const Text('Iniciar Sesión'),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              return const Color(0xFF004489);
+            }
+          ),
+        ),
+        onPressed: () => _login()
+      ),
+    );
+  }
+
+  Widget _showRegisterButton() {
+    return Expanded(
+      child: ElevatedButton(
+        child: Text('Nuevo Usuario'),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              return Color(0xFFFF1E0B);
+            }
+          ),
+        ),
+        onPressed: () => _register(), 
+      ),
+    );
+  }
+
+  Widget _showFacebookLoginButton() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () => _loginFacebook(),
+            icon: FaIcon(
+              FontAwesomeIcons.facebook,
+              color: Colors.white,
+            ),
+            label: Text('Iniciar sesión con Facebook'),
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFF3B5998),
+              onPrimary: Colors.white
+            )
+          )
+        )
+      ],
+    );
+  }
+
+  void _loginFacebook() async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    await FacebookAuth.i.logOut();
+    var result = await FacebookAuth.i.login(
+      permissions: ["public_profile", "email"]
+    );
+    
+    if (result.status != LoginStatus.success) {
+      print(result.message);
+      setState(() {
+        _showLoader = false;
+      });
+ 
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: 'Hubo un problema al obtener el usuario de Facebook, por favor intenta más tarde.',
+        actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+        ]
+      );    
+      return;
+    }
+
+    final requestData = await FacebookAuth.i.getUserData(
+      fields: "email, name, picture.width(800).heigth(800), first_name, last_name",
+    );
+
+    var picture = requestData['picture'];
+    var data = picture['data'];
+
+    Map<String, dynamic> request = {
+      'email': requestData['email'],
+      'id': requestData['id'],
+      'loginType': 2,
+      'fullName': requestData['name'],
+      'photoURL': data['url'],
+      'firtsName': requestData['first_name'],
+      'lastName': requestData['last_name'],
+    };
+
+    await _socialLogin(request);
   }
 }

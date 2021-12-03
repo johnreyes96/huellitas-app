@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Huellitas</string>
+    <string name="facebook_app_id">270815148428435</string>
+    <string name="fb_login_protocol_scheme">fb270815148428435</string>
+</resources>

@@ -11,6 +11,8 @@ import 'package:huellitas_app_flutter/screens/user_info_screen.dart';
 import 'package:huellitas_app_flutter/screens/user_screen.dart';
 import 'package:huellitas_app_flutter/screens/users_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
 class HomeScreen extends StatefulWidget {
   final Token token;
@@ -75,7 +77,47 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Color(0xFF004489)
               )
             )
-          )
+          ),
+            SizedBox(height: 10,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Llamar a la clínica veterinaria'),
+                SizedBox(width: 10,),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    color: Colors.blue,
+                    child: IconButton(
+                      icon: Icon(Icons.call, color: Colors.white,),
+                      onPressed: () => launch("tel://+573223114620"), 
+                    ),
+                  ),
+                )
+              ],
+            ),       
+            SizedBox(height: 10,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Enviar mensaje a la clínica'),
+                SizedBox(width: 10,),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    color: Colors.green,
+                    child: IconButton(
+                      icon: Icon(Icons.insert_comment, color: Colors.white,),
+                      onPressed: () => _sendMessage(), 
+                    ),
+                  ),
+                )
+              ],
+            ),  
         ]
       )
     );
@@ -178,6 +220,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               );
             },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.language,
+              color: Colors.white
+            ),
+            tileColor: const Color(0xFF004489),
+            title: const Text(
+              'Huellitas en WEB',
+              style: TextStyle(
+                color: Colors.white
+              )
+            ),
+            onTap: () => launch("https://apihuellitas.azurewebsites.net/"),
           ),
           ListTile(
             leading: const Icon(
@@ -346,5 +402,13 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) => LoginScreen()
       )
     );
+  }
+
+  void _sendMessage() async {
+    final link = WhatsAppUnilink(
+      phoneNumber: '+573223114620',
+      text: 'Hola soy ${widget.token.user.fullName} cliente de la clínica veterinaria'
+    );
+    await launch('$link');
   }
 } 

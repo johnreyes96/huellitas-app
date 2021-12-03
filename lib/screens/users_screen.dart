@@ -175,7 +175,8 @@ class _UsersScreenState extends State<UsersScreen> {
             address: '', 
             imageId: '', 
             imageFullPath: '', 
-            userType: 0, 
+            userType: 1, 
+            loginType: 0, 
             fullName: '',
             pets: [],
             petsCount: 0,
@@ -183,6 +184,7 @@ class _UsersScreenState extends State<UsersScreen> {
             id: '', 
             userName: '', 
             email: '', 
+            countryCode: '57',
             phoneNumber: ''
           ),
         )
@@ -283,7 +285,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '+ ${e.phoneNumber}',
+                                  '+${e.countryCode} ${e.phoneNumber}',
                                   style: TextStyle(
                                     fontSize: 14
                                   )

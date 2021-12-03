@@ -247,7 +247,7 @@ class _PetsScreenState extends State<PetsScreen> {
                               )
                             ),
                             Text(
-                              '+ ${_user.phoneNumber}', 
+                              '+${_user.countryCode} ${_user.phoneNumber}', 
                               style: const TextStyle(
                                 fontSize: 14
                               )

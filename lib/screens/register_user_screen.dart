@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:huellitas_app_flutter/components/loader_component.dart';
@@ -25,6 +26,8 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   bool _photoChanged = false;
   bool _passwordShow = false;
   late XFile _image;
+  String _countryName = 'Colombia (CO)';
+  String _countryCode = '57';
 
   String _firstName = '';
   String _firstNameError = '';
@@ -98,6 +101,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                 _showDocument(),
                 _showEmail(),
                 _showAddress(),
+                _showCountry(),
                 _showPhoneNumber(),
                 _showPassword(),
                 _showConfirm(),
@@ -354,6 +358,42 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
     );
   }
 
+  Widget _showCountry() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        children: <Widget>[
+          ElevatedButton(
+            child: Text('Seleccionar País'),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                return Color(0xFFE03B8B);
+              }),
+            ),
+            onPressed: () => _selectCountry(),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text('$_countryCode $_countryName'),
+        ],
+      ),
+    );
+  }
+
+  void _selectCountry() {
+    showCountryPicker(
+      context: context,
+      onSelect: (Country country) {
+        setState(() {
+          _countryName = country.displayNameNoCountryCode;
+          _countryCode = country.phoneCode;
+        });
+      },
+    );
+  }
+
   Widget _showPhoneNumber() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -449,17 +489,37 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   void _takePicture() async {
     WidgetsFlutterBinding.ensureInitialized();
     final cameras = await availableCameras();
-    final firstCamera = cameras.first;
+    var camera = cameras.first;
+    var responseCamera = await showAlertDialog(
+        context: context,
+        title: 'Seleccionar cámara',
+        message: '¿Qué cámara desea utilizar?',
+        actions: <AlertDialogAction>[
+          AlertDialogAction(key: 'front', label: 'Delantera'),
+          AlertDialogAction(key: 'back', label: 'Trasera'),
+          AlertDialogAction(key: 'cancel', label: 'Cancelar'),
+        ]);
+
+    if (responseCamera == 'cancel') {
+      return;
+    }
+
+    if (responseCamera == 'back') {
+      camera = cameras.first;
+    }
+
+    if (responseCamera == 'front') {
+      camera = cameras.last;
+    }
+
     Response? response = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => TakePictureScreen(camera: firstCamera,)
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => TakePictureScreen(camera: camera)));
     if (response != null) {
       setState(() {
-          _photoChanged = true;
-          _image = response.result;
+        _photoChanged = true;
+        _image = response.result;
       });
     }
   }
@@ -640,6 +700,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       'email': _email,
       'userName': _email,
       'address': _address,
+      'countryCode': _countryCode,
       'phoneNumber': _phoneNumber,
       'image': base64image,
       'password': _password

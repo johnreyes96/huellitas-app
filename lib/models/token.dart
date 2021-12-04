@@ -13,6 +13,7 @@ class Token {
     imageId: '', 
     imageFullPath: '', 
     userType: 0, 
+    loginType: 0,
     fullName: '',
     pets: [],
     petsCount: 0,
@@ -20,6 +21,7 @@ class Token {
     id: '', 
     userName: '', 
     email: '', 
+    countryCode: '57',
     phoneNumber: ''
   );
 

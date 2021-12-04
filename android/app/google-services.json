@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "233126342314",
+    "project_id": "huellitas-e5bb5",
+    "storage_bucket": "huellitas-e5bb5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233126342314:android:e5eb198f14f8e293d1aad3",
+        "android_client_info": {
+          "package_name": "com.softwaresolutions.huellitas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233126342314-ll1rjvbvro9f10qvedg63agsjqbpm1fr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.softwaresolutions.huellitas",
+            "certificate_hash": "d83851ecfe363d571c447676a497d32e37a8f694"
+          }
+        },
+        {
+          "client_id": "233126342314-0r6phhm507dh98slbr2g3nvrj9j9459p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYnYsryX3U-8GyY1yI7wVKkGfXDN2BmuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "233126342314-0r6phhm507dh98slbr2g3nvrj9j9459p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

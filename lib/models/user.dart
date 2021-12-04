@@ -11,7 +11,8 @@ class User {
   String address = '';
   String imageId = '';
   String imageFullPath = '';
-  int userType = 0;
+  int userType = 1;
+  int loginType = 0;
   String fullName = '';
   List<Pet> pets = [];
   int petsCount = 0;
@@ -19,6 +20,7 @@ class User {
   String id = '';
   String userName = '';
   String email = '';
+  String countryCode = '';
   String phoneNumber = '';
 
   User({
@@ -30,6 +32,7 @@ class User {
     required this.imageId,
     required this.imageFullPath,
     required this.userType,
+    required this.loginType,
     required this.fullName,
     required this.pets,
     required this.petsCount,
@@ -37,6 +40,7 @@ class User {
     required this.id,
     required this.userName,
     required this.email,
+    required this.countryCode,
     required this.phoneNumber,
   });
 
@@ -49,6 +53,7 @@ class User {
     imageId = json['imageId'];
     imageFullPath = json['imageFullPath'];
     userType = json['userType'];
+    loginType = json['loginType'];
     fullName = json['fullName'];
     if (json['pets'] != null) {
       pets = [];
@@ -66,6 +71,7 @@ class User {
     id = json['id'];
     userName = json['userName'];
     email = json['email'];
+    countryCode = json['countryCode'];
     phoneNumber = json['phoneNumber'];
   }
 
@@ -79,6 +85,7 @@ class User {
     data['imageId'] = this.imageId;
     data['imageFullPath'] = this.imageFullPath;
     data['userType'] = this.userType;
+    data['loginType'] = this.loginType;
     data['fullName'] = this.fullName;
     data['pets'] = this.pets.map((v) => v.toJson()).toList();
     data['petsCount'] = this.petsCount;
@@ -86,6 +93,7 @@ class User {
     data['id'] = this.id;
     data['userName'] = this.userName;
     data['email'] = this.email;
+    data['countryCode'] = this.countryCode;
     data['phoneNumber'] = this.phoneNumber;
     return data;
   }

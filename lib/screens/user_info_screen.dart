@@ -2,20 +2,25 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
-import 'package:huellitas_app_flutter/models/pet.dart';
-import 'package:huellitas_app_flutter/models/pet_type.dart';
+import 'package:huellitas_app_flutter/helpers/regex_helper.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/models/user.dart';
+import 'package:huellitas_app_flutter/screens/pets_screen.dart';
 import 'package:huellitas_app_flutter/screens/user_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
 class UserInfoScreen extends StatefulWidget {
   final Token token;
   final User user;
+  final bool isAdmin;
 
-  UserInfoScreen({required this.token, required this.user});
+  // ignore: use_key_in_widget_constructors
+  const UserInfoScreen({required this.token, required this.user, required this.isAdmin});
 
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
@@ -131,12 +136,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   }
                 ),
               ),
-              onPressed: () => {}
+              onPressed: () => _goPets()
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _goPets() async {
+    String? result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PetsScreen(
+        token: widget.token,
+        user: _user,
+        isAdmin: widget.isAdmin,
+      ))
+    );
+    if (result == 'yes') {
+      _getUser();
+    }
   }
 
   Widget _showUserInfo() {
@@ -289,7 +309,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   )
                                 ),
                                 Text(
-                                  _user.phoneNumber, 
+                                  '+${_user.countryCode} ${_user.phoneNumber}',
                                   style: TextStyle(
                                     fontSize: 14
                                   )
@@ -331,7 +351,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   )
                                 ),
                               ],
-                            )
+                            ),
+                            SizedBox(height: 5),
+                            widget.isAdmin ? _showCallButtons() : Container()
                           ]
                         ),
                       )
@@ -353,12 +375,54 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         builder: (context) => UserScreen(
           token: widget.token, 
           user: _user,
-          myProfile: false,
+          myProfile: widget.isAdmin,
         )
       )
     );
     if (result == 'yes') {
       //TODO: Pending refresh user info
     }
+  }
+
+  Widget _showCallButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              height: 40,
+              width: 40,
+              color: Colors.blue,
+              child: IconButton(
+                icon: Icon(Icons.call, color: Colors.white,),
+                onPressed: () => launch('tel://+${widget.user.countryCode}${RegexHelper.removeBlankSpaces(widget.user.phoneNumber)}'), 
+              ),
+            ),
+          ),       
+          SizedBox(width: 10,),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              height: 40,
+              width: 40,
+              color: Colors.green,
+              child: IconButton(
+                icon: Icon(Icons.insert_comment, color: Colors.white,),
+                onPressed: () => _sendMessage(), 
+              ),
+            ),
+          ),       
+          SizedBox(width: 10,),
+      ],
+    );
+  }
+
+  void _sendMessage() async {
+    final link = WhatsAppUnilink(
+      phoneNumber: '+${widget.user.countryCode}${RegexHelper.removeBlankSpaces(widget.user.phoneNumber)}',
+      text: 'Hola te escribo de la clínica veterinaria.',
+    );
+    await launch('$link');  
   }
 }

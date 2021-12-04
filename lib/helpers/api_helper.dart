@@ -4,7 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:huellitas_app_flutter/helpers/constants.dart';
 import 'package:huellitas_app_flutter/models/appointment.dart';
 import 'package:huellitas_app_flutter/models/appointment_type.dart';
+import 'package:huellitas_app_flutter/models/billing.dart';
+import 'package:huellitas_app_flutter/models/billing_detail.dart';
 import 'package:huellitas_app_flutter/models/document_type.dart';
+import 'package:huellitas_app_flutter/models/pet.dart';
 import 'package:huellitas_app_flutter/models/pet_type.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
 import 'package:huellitas_app_flutter/models/service.dart';
@@ -313,5 +316,78 @@ class ApiHelper {
     }
 
     return Response(isSuccess: true, result: list);
+  }
+
+
+   static Future<Response> getPet(Token token, String id) async {
+    if (!_validToken(token)) {
+      return Response(isSuccess: false, message: 'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
+    }
+
+    var url = Uri.parse('${Constants.apiUrl}/api/Pets/$id');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-Type': 'application/json',
+        'accept': 'application/json',
+        'authorization': 'bearer ${token.token}'
+      }
+    );
+
+    var body = response.body;
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    var decodedJson = jsonDecode(body);
+    return Response(isSuccess: true, result: Pet.fromJson(decodedJson));
+  }
+
+  static Future<Response> getBilling(Token token, String id) async {
+    if (!_validToken(token)) {
+      return Response(isSuccess: false, message: 'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
+    }
+
+    var url = Uri.parse('${Constants.apiUrl}/api/Billings/$id');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-Type': 'application/json',
+        'accept': 'application/json',
+        'authorization': 'bearer ${token.token}'
+      }
+    );
+
+    var body = response.body;
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    var decodedJson = jsonDecode(body);
+    return Response(isSuccess: true, result: Billing.fromJson(decodedJson));
+  }
+
+  static Future<Response> getBillingDetail(Token token, String id) async {
+    if (!_validToken(token)) {
+      return Response(isSuccess: false, message: 'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
+    }
+
+    var url = Uri.parse('${Constants.apiUrl}/api/BillingDetails/$id');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-Type': 'application/json',
+        'accept': 'application/json',
+        'authorization': 'bearer ${token.token}'
+      }
+    );
+
+    var body = response.body;
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    var decodedJson = jsonDecode(body);
+    return Response(isSuccess: true, result: BillingDetail.fromJson(decodedJson));
   }
 }

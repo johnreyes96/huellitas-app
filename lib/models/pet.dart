@@ -8,7 +8,7 @@ class Pet {
   String name = '';
   String race = '';
   String color = '';
-  String observations = '';
+  String? observations = '';
   int petPhotosCount = 0;
   List<PetPhoto> petPhotos = [];
   String imageFullPath = '';

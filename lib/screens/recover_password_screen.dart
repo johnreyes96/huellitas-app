@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
@@ -25,7 +26,10 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Recuperar contraseña'),
+        title: Text(
+          'Recuperar contraseña',
+          style: GoogleFonts.lato(),
+        ),
         backgroundColor: const Color(0xFF004489),
       ),
       body: Stack(
@@ -37,7 +41,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
               _showButtons()
             ]
           ),
-          _showLoader ? LoaderComponent(text: 'Por favor espere...') : Container()
+          _showLoader ? LoaderComponent(text: 'Cargando...') : Container()
         ],
       )
     );

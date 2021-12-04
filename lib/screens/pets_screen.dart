@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
@@ -41,12 +42,15 @@ class _PetsScreenState extends State<PetsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_user.fullName),
+        title: Text(
+          _user.fullName,
+          style: GoogleFonts.lato(),
+        ),
         backgroundColor: const Color(0xFF004489),
       ),
       body: Center(
         child: _showLoader
-          ? const LoaderComponent(text: 'Por favor espere...')
+          ? const LoaderComponent(text: 'Cargando...')
           : _getContent()
       ),
       floatingActionButton: FloatingActionButton(

@@ -7,6 +7,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:huellitas_app_flutter/components/loader_component.dart';
@@ -85,7 +86,8 @@ class _UserScreenState extends State<UserScreen> {
         title: Text(
           widget.user.id.isEmpty
             ? 'Nuevo usuario' 
-            : widget.user.fullName
+            : widget.user.fullName,
+          style: GoogleFonts.lato(),
         ),
         backgroundColor: const Color(0xFF004489),
       ),
@@ -107,7 +109,7 @@ class _UserScreenState extends State<UserScreen> {
               ],
             ),
           ),
-          _showLoader ? LoaderComponent(text: 'Por favor espere...',) : Container(),
+          _showLoader ? LoaderComponent(text: 'Cargando...',) : Container(),
         ],
       ),
     );

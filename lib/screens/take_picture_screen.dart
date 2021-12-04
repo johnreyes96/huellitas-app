@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
 import 'package:huellitas_app_flutter/screens/display_picture_screen.dart';
 
@@ -36,7 +37,10 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tomar Foto'),
+        title: Text(
+          'Tomar Foto',
+          style: GoogleFonts.lato(),
+        ),
         backgroundColor: const Color(0xFF004489),
       ),
       body: FutureBuilder<void> (

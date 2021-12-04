@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import 'package:huellitas_app_flutter/components/loader_component.dart';
@@ -47,12 +48,15 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${_pet.name} ${_pet.race}'),
+        title: Text(
+          '${_pet.name} ${_pet.race}',
+          style: GoogleFonts.lato(),
+        ),
         backgroundColor: const Color(0xFF004489),
       ),
       body: Center(
         child: _showLoader
-          ? const LoaderComponent(text: 'Por favor espere...')
+          ? const LoaderComponent(text: 'Cargando...')
           : _getContent()
       ),
       floatingActionButton: widget.isAdmin

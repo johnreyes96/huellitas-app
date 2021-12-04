@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ]
             )
           ),
-          _showLoader ? const LoaderComponent(text: 'Por favor espere...') : Container()
+          _showLoader ? const LoaderComponent(text: 'Cargando...') : Container()
         ]
       )
     );

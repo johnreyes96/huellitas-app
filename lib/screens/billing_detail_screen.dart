@@ -1,6 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
@@ -58,9 +59,10 @@ class _BillingDetailScreenState extends State<BillingDetailScreen> {
         title: Text(
           widget.billingDetail.id == 0
             ? 'Nuevo detalle factura' 
-            : widget.billingDetail.service.description
-        ),
-        backgroundColor: const Color(0xFF004489),
+            : widget.billingDetail.service.description,
+              style: GoogleFonts.lato(),
+            ),
+            backgroundColor: const Color(0xFF004489),
       ),
       body: Stack(
         children: [
@@ -75,7 +77,7 @@ class _BillingDetailScreenState extends State<BillingDetailScreen> {
               ],
             ),
           ),
-          _showLoader ? const LoaderComponent(text: 'Por favor espere...',) : Container(),
+          _showLoader ? const LoaderComponent(text: 'Cargando...',) : Container(),
         ],
       ),
     );

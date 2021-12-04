@@ -6,6 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
 import 'package:huellitas_app_flutter/models/pet_type.dart';
 import 'package:image_picker/image_picker.dart';
@@ -72,12 +73,13 @@ class _PetScreenState extends State<PetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF004489),
         title: Text(
           widget.pet.id == 0
             ? 'Nueva mascota' 
-            : '${widget.pet.name} ${widget.pet.race}'
+            : '${widget.pet.name} ${widget.pet.race}',
+          style: GoogleFonts.lato(),
         ),
+        backgroundColor: const Color(0xFF004489),
       ),
       body: Stack(
         children: [
@@ -94,7 +96,7 @@ class _PetScreenState extends State<PetScreen> {
               ],
             ),
           ),
-          _showLoader ? const LoaderComponent(text: 'Por favor espere...',) : Container(),
+          _showLoader ? const LoaderComponent(text: 'Cargando...',) : Container(),
         ],
       ),
     );

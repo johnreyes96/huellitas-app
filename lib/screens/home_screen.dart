@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/screens/appointment_types_screen.dart';
@@ -30,8 +31,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Huellitas'),
-        backgroundColor: const Color(0xFF004489),
+        title: Text(
+          'Huellitas',
+          style: GoogleFonts.lato(),
+        ),
+        backgroundColor: const Color(0xFF004489)
       ),
       body: _getBody(),
       drawer: Theme(

@@ -1,6 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
@@ -40,8 +41,10 @@ class _ServiceScreenState extends State<ServiceScreen> {
         title: Text(
           widget.service.id == 0 
             ? 'Nuevo servicio' 
-            : widget.service.description
+            : widget.service.description,
+          style: GoogleFonts.lato(),
         ),
+        backgroundColor: const Color(0xFF004489),
       ),
       body: Stack(
         children: <Widget>[
@@ -51,7 +54,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
               _showButtons(),
             ],
           ),
-          _showLoader ? LoaderComponent(text: 'Por favor espere...',) : Container(),
+          _showLoader ? LoaderComponent(text: 'Cargando...',) : Container(),
         ],
       ),
     );

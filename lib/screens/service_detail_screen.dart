@@ -1,6 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
@@ -39,12 +40,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF004489),
         title: Text(
           widget.serviceDetail.id == 0
             ? 'Nuevo detalle servicio' 
-            : widget.serviceDetail.description
+            : widget.serviceDetail.description,
+          style: GoogleFonts.lato(),
         ),
+        backgroundColor: const Color(0xFF004489),
       ),
       body: Stack(
         children: [
@@ -57,7 +59,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               ],
             ),
           ),
-          _showLoader ? const LoaderComponent(text: 'Por favor espere...',) : Container(),
+          _showLoader ? const LoaderComponent(text: 'Cargando...',) : Container(),
         ],
       ),
     );

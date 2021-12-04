@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:huellitas_app_flutter/models/response.dart';
 
@@ -19,7 +20,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Vista previa de la foto'
+          'Vista previa de la foto',
+          style: GoogleFonts.lato(),
         ),
         backgroundColor: const Color(0xFF004489),
       ),

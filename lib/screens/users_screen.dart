@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
 import 'package:huellitas_app_flutter/models/document_type.dart';
@@ -36,7 +37,10 @@ class _UsersScreenState extends State<UsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Usuarios'),
+        title: Text(
+          'Usuarios',
+          style: GoogleFonts.lato(),
+        ),
         backgroundColor: const Color(0xFF004489),
         actions: <Widget>[
           _isFiltered
@@ -51,7 +55,7 @@ class _UsersScreenState extends State<UsersScreen> {
         ],
       ),
       body: Center(
-        child: _showLoader ? LoaderComponent(text: 'Por favor espere...') : _getContent(),
+        child: _showLoader ? LoaderComponent(text: 'Cargando...') : _getContent(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

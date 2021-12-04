@@ -1,6 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
 import 'package:huellitas_app_flutter/models/pet_type.dart';
@@ -34,7 +35,11 @@ class _PetTypesScreenState extends State<PetTypesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tipos de Mascota'),
+        title: Text(
+          'Tipos de Mascota',
+          style: GoogleFonts.lato(),
+        ),
+        backgroundColor: const Color(0xFF004489),
         actions: <Widget>[
           _isFiltered
           ? IconButton(
@@ -48,7 +53,7 @@ class _PetTypesScreenState extends State<PetTypesScreen> {
         ],
       ),
       body: Center(
-        child: _showLoader ? LoaderComponent(text: 'Por favor espere...') : _getContent(),
+        child: _showLoader ? LoaderComponent(text: 'Cargando...') : _getContent(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

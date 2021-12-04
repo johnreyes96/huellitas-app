@@ -2,7 +2,7 @@ import 'package:huellitas_app_flutter/models/appointment_type.dart';
 
 class Appointment {
   int id = 0;
-  String date = '';
+  DateTime date = DateTime.now();
   AppointmentType appointmentType = AppointmentType(id: 0, description: '');
 
   Appointment({required this.id, required this.date, required this.appointmentType});

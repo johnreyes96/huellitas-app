@@ -7,10 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
 import 'package:huellitas_app_flutter/model/event.dart';
+import 'package:huellitas_app_flutter/models/appointment.dart';
 import 'package:huellitas_app_flutter/models/appointment_type.dart';
 import 'package:huellitas_app_flutter/models/response.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
+import 'package:huellitas_app_flutter/provider/event_provider.dart';
 import 'package:huellitas_app_flutter/utils.dart';
+import 'package:provider/provider.dart';
 
 class EventEditingPage extends StatefulWidget {
   final Event? event;
@@ -36,7 +39,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
   int _appointmentTypeId = 0;
   String _appointmentTypesIdError = '';
   bool _appointmentTypeIdShowError = false;
-
+  late AppointmentType _appointmentTy;
 
   @override
   void initState(){
@@ -44,6 +47,10 @@ class _EventEditingPageState extends State<EventEditingPage> {
     _getComboAppointmentType();
     if(widget.event == null){
       fromDate = DateTime.now();
+    }else{
+        final event = widget.event!;
+        _appointmentTy.description = event.description;
+        fromDate = event.from;
     }
   }
 
@@ -80,7 +87,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
         primary: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
-      onPressed: (){},
+      onPressed: saveForm,
       icon: Icon(Icons.done), 
       label: Text('Guardar'))
   ];
@@ -97,6 +104,8 @@ class _EventEditingPageState extends State<EventEditingPage> {
             onChanged: (option) {
               setState(() {
                 _appointmentTypeId = option as int;
+                _appointmentTy = option as AppointmentType;
+                print("Tipo cita: " + _appointmentTy.description);
               });
             },
             decoration: InputDecoration(
@@ -228,7 +237,68 @@ class _EventEditingPageState extends State<EventEditingPage> {
     if (!_validateFields()) {
       return;
     }
+    final event = Appointment(
+      appointmentType: _appointmentTy,
+      date: fromDate,
+      id: 0
+    );
+
+    final provider = Provider.of<EventProvider>(context, listen: true);
+    provider.addEvent(event);
+    _saveRecord(event);
     
+  }
+
+void _saveRecord(Appointment event) async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+      await showAlertDialog(
+        context: context,
+        title: 'Error', 
+        message: 'Verifica que estes conectado a internet.',
+        actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+        ]
+      );    
+      return;
+    }
+
+    Map<String, dynamic> request = {
+      'userId': widget.token.user.id,
+      'appointmentTypeId': _appointmentTy.id,
+      'date': fromDate,
+    };
+
+    Response response = await ApiHelper.post(
+      '/api/Appointments/', 
+      request, 
+      widget.token
+    );
+
+    setState(() {
+      _showLoader = false;
+    });
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+        context: context,
+        title: 'Error', 
+        message: response.message,
+        actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+        ]
+      );    
+      return;
+    }
+
+    Navigator.pop(context, 'yes');
   }
 
   Future pickFromDateTime({required bool pickDate}) async {

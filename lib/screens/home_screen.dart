@@ -157,27 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.event,
-              color: Colors.white
-            ),
-            tileColor: const Color(0xFF004489),
-            title: const Text(
-              'Citas',
-              style: TextStyle(
-                color: Colors.white
-              )
-            ),
-            onTap: () { 
-              Navigator.push(
-                context, 
-                MaterialPageRoute(
-                  builder: (context) => AppointmentsScreen(token: widget.token,)
-                )
-              );
-            },
-          ),
+          
           ListTile(
             leading: const Icon(
               Icons.pets,
@@ -295,6 +275,27 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ),
             onTap: () { }
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.event,
+              color: Colors.white
+            ),
+            tileColor: const Color(0xFF004489),
+            title: const Text(
+              'Citas',
+              style: TextStyle(
+                color: Colors.white
+              )
+            ),
+            onTap: () { 
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => AppointmentsScreen(token: widget.token,)
+                )
+              );
+            },
           ),
           const Divider(
             color: Colors.black, 

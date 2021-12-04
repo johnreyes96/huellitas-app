@@ -347,6 +347,20 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
           ),
+          ListTile(
+            leading: const Icon(
+              Icons.event,
+              color: Colors.white
+            ),
+            tileColor: const Color(0xFF004489),
+            title: const Text(
+              'Mis citas',
+              style: TextStyle(
+                color: Colors.white
+              )
+            ),
+            onTap: () {}
+          ),
           const Divider(
             color: Colors.black, 
             height: 2

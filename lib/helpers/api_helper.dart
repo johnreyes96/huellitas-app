@@ -287,12 +287,12 @@ class ApiHelper {
   }
 
 
-  static Future<Response> getAppointments(Token token) async {
+  static Future<Response> getAppointments(Token token, String id) async {
     if (!_validToken(token)) {
       return Response(isSuccess: false, message: 'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
     }
     
-    var url = Uri.parse('${Constants.apiUrl}/api/Appointments');
+    var url = Uri.parse('${Constants.apiUrl}/api/Appointments/$id');
     var response = await http.get(
       url,
       headers: {

@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:huellitas_app_flutter/components/loader_component.dart';
 import 'package:huellitas_app_flutter/helpers/api_helper.dart';
+import 'package:huellitas_app_flutter/model/event.dart';
 import 'package:huellitas_app_flutter/model/event_data_source.dart';
+import 'package:huellitas_app_flutter/models/appointment.dart' as Appoint;
 import 'package:huellitas_app_flutter/models/response.dart';
 import 'package:huellitas_app_flutter/models/token.dart';
 import 'package:huellitas_app_flutter/provider/event_provider.dart';
@@ -26,12 +28,17 @@ class CalendarWidget extends StatefulWidget {
 
 
 class _CalendarWidgetsState extends State<CalendarWidget> {
-    List<Appointment> appointment = [];
     bool _showLoader = false;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    List<Event> evento = [];
     @override
     void initState() {
       super.initState();
-      _getAppointments(widget.token);
+      //_getAppointments(widget.token);
+      for(int i=0; i<widget.token.user.appointments.length; i++){
+        data['description'] = widget.token.user.appointments[i].appointmentType.description;
+        data['from'] = widget.token.user.appointments[i].date;
+      }
     }
 
   @override
@@ -39,7 +46,7 @@ class _CalendarWidgetsState extends State<CalendarWidget> {
     final events = Provider.of<EventProvider>(context).events;
     return SfCalendar(
       view: CalendarView.month,
-      //dataSource: EventDataSource(events),
+      dataSource: EventDataSource(events),
       initialSelectedDate: DateTime.now(),
       cellBorderColor: Colors.transparent,
       onLongPress: (details){
@@ -56,7 +63,7 @@ class _CalendarWidgetsState extends State<CalendarWidget> {
     );
   }
 
-  Future<Null> _getAppointments(Token token) async {
+  /*Future<Null> _getAppointments(Token token) async {
     setState(() {
       _showLoader = true;
     });
@@ -77,7 +84,7 @@ class _CalendarWidgetsState extends State<CalendarWidget> {
       return;
     }
 
-    Response response = await ApiHelper.getAppointments(widget.token);
+    Response response = await ApiHelper.getAppointments(widget.token, widget.token.user.id);
     print('Token: ' + widget.token.token);
     print('id: ' + widget.token.user.id);
     setState(() {
@@ -99,7 +106,7 @@ class _CalendarWidgetsState extends State<CalendarWidget> {
     setState(() {
       appointment = response.result;
     });
-  }
+  }*/
 
 
 }

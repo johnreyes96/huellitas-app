@@ -32,6 +32,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.light,
+      darkTheme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: Colors.black,
+        accentColor: Colors.white,
+      ),
       title: 'Huellitas App',
       home: _isLoading
       ? WaitScreen()

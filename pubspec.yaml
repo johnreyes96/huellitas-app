@@ -46,8 +46,12 @@ dependencies:
   path_provider: ^2.0.5
   path: ^1.8.0
   shared_preferences: ^2.0.8
-  carousel_slider: ^4.0.0
   intl: ^0.17.0
+  flutter_colorpicker: ^0.6.0
+  provider: ^5.0.0
+  syncfusion_flutter_calendar: ^19.1.59
+
+  carousel_slider: ^4.0.0
   font_awesome_flutter: ^9.2.0
   google_sign_in: ^5.2.1
   flutter_facebook_auth: ^3.5.3

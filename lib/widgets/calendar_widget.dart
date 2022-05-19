@@ -46,7 +46,7 @@ class _CalendarWidgetsState extends State<CalendarWidget> {
     final events = Provider.of<EventProvider>(context).events;
     return SfCalendar(
       view: CalendarView.month,
-      dataSource: EventDataSource(events),
+      // dataSource: EventDataSource(events),
       initialSelectedDate: DateTime.now(),
       cellBorderColor: Colors.transparent,
       onLongPress: (details){

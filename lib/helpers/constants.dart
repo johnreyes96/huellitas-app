@@ -1,3 +1,3 @@
 class Constants {
-  static String get apiUrl => 'https://apihuellitas.azurewebsites.net';
+  static String get apiUrl => 'https://huellitasapi.azurewebsites.net';
 } 
